@@ -179,7 +179,7 @@ export const Hero: React.FC<HeroProps> = ({ lang, onNavigate }) => {
           {/* BASE HERO IMAGE (New Authentic Ultra-Res Panoramic Banner)    */}
           {/* ============================================================== */}
           <img
-            src="/assets/aistudio/8eaabfe4-c5b7-499a-ad98-5939538b7ea6_284a4282.png"
+            src="/assets/aladeel/8eaabfe4-c5b7-499a-ad98-5939538b7ea6_284a4282.png"
             alt="Al Adeel Advertising LLC - Printing, Embroidery & Advertising Solutions Across the UAE"
             width={1923}
             height={818}

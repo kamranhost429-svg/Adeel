@@ -63,7 +63,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ lang, onNavigate }) => {
           <div className="lg:col-span-6">
             <div className="rounded-3xl overflow-hidden border border-gray-200 shadow-2xl bg-gray-50 group transition-all duration-300">
               <img
-                src="/assets/aistudio/18505b1f-e21e-4f40-8289-f55d8e4352d3_b913fe5f.jpg"
+                src="/assets/aladeel/18505b1f-e21e-4f40-8289-f55d8e4352d3_b913fe5f.jpg"
                 alt="Al Adeel Printing, Embroidery, Advertising & Merchandise Showcase in Dubai"
                 className="w-full h-auto object-cover block group-hover:scale-[1.01] transition-transform duration-500"
               />

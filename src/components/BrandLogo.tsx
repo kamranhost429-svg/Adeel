@@ -31,7 +31,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       {variant === 'dark' ? (
         <div className="inline-flex items-center justify-center bg-white p-2.5 sm:p-3 rounded-2xl shadow-md border border-amber-500/20">
           <img
-            src="/assets/aistudio/17243eaa-7bbd-4349-92dd-439c21ad3699_ff55c77f.jpg"
+            src="/assets/aladeel/17243eaa-7bbd-4349-92dd-439c21ad3699_ff55c77f.jpg"
             alt="Al Adeel Advertising LLC Logo"
             width={1254}
             height={1254}
@@ -42,7 +42,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         </div>
       ) : (
         <img
-          src="/assets/aistudio/3f5302dd-b3e9-4a33-8f91-51b76db08223_f2f8eb28.png"
+          src="/assets/aladeel/3f5302dd-b3e9-4a33-8f91-51b76db08223_f2f8eb28.png"
           alt="Al Adeel Advertising LLC Logo"
           width={2172}
           height={724}

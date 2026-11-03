@@ -198,10 +198,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
 
   // Mock Portfolio CMS
   const [portfolioItems, setPortfolioItems] = useState<PortfolioCMSItem[]>([
-    { id: '1', title: 'Luxury Business Cards & Gold Foil Stationery', category: 'printing', image: '/assets/aistudio/2c652956-7da9-4202-8a68-8f60648a4af5_0d1999c8.jpg', description: 'Velvet soft-touch lamination with embossed gold foil stamping.' },
-    { id: '2', title: 'Embroidered Polo Uniforms & Caps', category: 'embroidery', image: '/assets/aistudio/37895847-cabe-49b4-a74d-6ddb22dd5d01_2562c081.jpg', description: 'Heavy cotton pique polo shirts with Tajima 3D puff embroidery.' },
+    { id: '1', title: 'Luxury Business Cards & Gold Foil Stationery', category: 'printing', image: '/assets/aladeel/2c652956-7da9-4202-8a68-8f60648a4af5_0d1999c8.jpg', description: 'Velvet soft-touch lamination with embossed gold foil stamping.' },
+    { id: '2', title: 'Embroidered Polo Uniforms & Caps', category: 'embroidery', image: '/assets/aladeel/37895847-cabe-49b4-a74d-6ddb22dd5d01_2562c081.jpg', description: 'Heavy cotton pique polo shirts with Tajima 3D puff embroidery.' },
     { id: '3', title: 'Storefront 3D Illuminated Signage', category: 'advertising', image: '/images/portfolio-store-signage.png', description: 'Cast acrylic letters with high-efficiency waterproof LED modules.' },
-    { id: '4', title: 'Full Commercial Fleet & Van Wrap', category: 'advertising', image: '/assets/aistudio/a05cbc49-b556-450b-879d-724970f0013e_8fc43049.jpg', description: '3M cast adhesive wrap film with UV protective laminate.' },
+    { id: '4', title: 'Full Commercial Fleet & Van Wrap', category: 'advertising', image: '/assets/aladeel/a05cbc49-b556-450b-879d-724970f0013e_8fc43049.jpg', description: '3M cast adhesive wrap film with UV protective laminate.' },
   ]);
   const [newPortfolioTitle, setNewPortfolioTitle] = useState('');
   const [newPortfolioCategory, setNewPortfolioCategory] = useState('printing');

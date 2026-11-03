@@ -64,7 +64,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ lang, onNavigate }) 
                 className="w-full h-full object-cover object-center"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
-                  e.currentTarget.src = '/assets/aistudio/2c652956-7da9-4202-8a68-8f60648a4af5_0d1999c8.jpg';
+                  e.currentTarget.src = '/assets/aladeel/2c652956-7da9-4202-8a68-8f60648a4af5_0d1999c8.jpg';
                 }}
               />
             </div>
