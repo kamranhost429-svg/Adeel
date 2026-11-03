@@ -59,6 +59,8 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ lang, onNavigate }) 
               <img
                 src={selectedService.image}
                 alt={selectedService.title}
+                loading="eager"
+                decoding="async"
                 className="w-full h-full object-cover object-center"
                 onError={(e) => {
                   e.currentTarget.onerror = null;

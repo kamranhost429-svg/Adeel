@@ -18,6 +18,13 @@
     background-color: #ffffff;
   }
 
+  /* Sharp, crisp image rendering for high-DPI & mobile displays */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: high-quality;
+    backface-visibility: hidden;
+  }
+
   h1, h2, h3, .font-serif {
     font-family: 'Playfair Display', Georgia, Cambria, 'Times New Roman', serif;
     letter-spacing: -0.015em;

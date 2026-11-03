@@ -75,6 +75,8 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({ lang, onNavigate }
                     <img
                       src={item.image}
                       alt={item.title}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       onError={(e) => {
                         e.currentTarget.onerror = null;

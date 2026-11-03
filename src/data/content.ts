@@ -5,7 +5,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     id: 'printing',
     title: 'Printing',
     badge: 'High Quality Prints',
-    image: '/images/service-printing.png',
+    image: '/images/optimized/service-printing.webp',
     description: 'High-quality printing for all your business needs, including business cards, brochures, flyers, banners, stickers, and promotional materials.',
     features: [
       'Digital & Offset Commercial Printing',
@@ -21,7 +21,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     id: 'embroidery',
     title: 'Embroidery',
     badge: 'Your Logo, Our Craft',
-    image: '/images/service-embroidery.png',
+    image: '/images/optimized/service-embroidery.webp',
     description: 'Premium embroidery for uniforms, corporate wear, caps, and more. We bring your brand to life with precision and quality stitching.',
     features: [
       'High-Speed Multi-Head Tajima Machinery',
@@ -37,7 +37,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     id: 'advertising',
     title: 'Advertising',
     badge: 'Greater Reach, Better Results',
-    image: '/images/service-advertising.png',
+    image: '/images/optimized/service-advertising.webp',
     description: 'Creative advertising solutions, including indoor and outdoor signage, light boxes, vehicle branding, standees, and promotional displays.',
     features: [
       '3D LED Backlit & Channel Letter Signage',
@@ -53,7 +53,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     id: 'corporate-gifts',
     title: 'Corporate Gifts',
     badge: 'Custom Corporate Gifts',
-    image: '/assets/aistudio/08-Corporate-Gifts-and-Promotional-Items_f68d016a.webp',
+    image: '/images/optimized/service-corporate-gifts.webp',
     description: 'Customized corporate gifts to promote your brand, strengthen business relationships, and leave a lasting impression',
     features: [
       'Laser Engraving, UV Full-Color & Screen Printing',
@@ -72,7 +72,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'port-1',
     title: 'Business Cards & Stationery',
     category: 'printing',
-    image: '/assets/aistudio/2c652956-7da9-4202-8a68-8f60648a4af5_0d1999c8.jpg',
+    image: '/images/optimized/port-printing.webp',
     description: 'Premium 450 GSM velvet touch business cards with raised metallic gold hot foil stamping and custom stationery suite.',
     specs: {
       material: '450 GSM Artcard + Velvet Soft-Touch',
@@ -86,7 +86,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'port-2',
     title: 'Embroidered Caps & Uniforms',
     category: 'embroidery',
-    image: '/assets/aistudio/37895847-cabe-49b4-a74d-6ddb22dd5d01_2562c081.jpg',
+    image: '/images/optimized/port-caps-uniforms.webp',
     description: 'Custom structured 6-panel heavy cotton twill caps with high-density 3D puff embroidery for Dubai corporate brand.',
     specs: {
       material: '100% Heavy Brushed Cotton Twill',
@@ -100,7 +100,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'port-3',
     title: 'Store Signage & Light Boxes',
     category: 'signage',
-    image: '/images/portfolio-store-signage.png',
+    image: '/images/optimized/port-store-signage.webp',
     description: 'Illuminated 3D channel letter signage with energy-efficient Samsung LED modules and gold mirror acrylic finish.',
     specs: {
       material: 'Mirror Gold Acrylic + Aluminum Backing',
@@ -114,7 +114,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'port-4',
     title: 'Vehicle Branding & Fleet Graphics',
     category: 'advertising',
-    image: '/assets/aistudio/a05cbc49-b556-450b-879d-724970f0013e_8fc43049.jpg',
+    image: '/images/optimized/port-vehicle.webp',
     description: 'Full commercial vehicle wrap using durable 3M cast vinyl with UV protective overlaminate for high Dubai sun exposure.',
     specs: {
       material: '3M IJ180 Cast Vinyl + Gloss Overlaminate',
@@ -128,7 +128,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'port-5',
     title: 'Banners & Standees & Display Solutions',
     category: 'advertising',
-    image: '/assets/aistudio/05-Banners-Standees-and-Display-Solutions_918b7a23.webp',
+    image: '/images/optimized/port-banners.webp',
     description: 'Heavy-duty luxury teardrop flags, pop-up backdrops, and aluminum roll-up banners for corporate exhibitions and showrooms.',
     specs: {
       material: 'Anti-Curl Non-Glare Blockout Banner PET',
@@ -142,7 +142,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'port-6',
     title: 'Uniforms & Corporate Wear',
     category: 'embroidery',
-    image: '/assets/aistudio/8db68b16-ad26-472e-879a-b898c4d04ea6_07cb324a.jpg',
+    image: '/images/optimized/port-uniforms.webp',
     description: 'Custom-designed corporate uniforms, polo shirts, T-shirts, and workwear with premium printing and embroidery solutions to enhance your brand identity.',
     specs: {
       material: '220 GSM Combed Cotton Pique',
@@ -156,7 +156,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'port-7',
     title: 'Packaging & Custom Printing',
     category: 'printing',
-    image: '/assets/aistudio/07-Packaging-and-Custom-Printing_b2a01da1.webp',
+    image: '/images/optimized/port-packaging.webp',
     description: 'Premium branded shopping bags featuring custom twisted cotton rope handles, gold foil stamping, and reinforced baseboards.',
     specs: {
       material: '250 GSM Coated Art Paper',
@@ -170,7 +170,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'port-8',
     title: 'Corporate Gifts & Promotional Items',
     category: 'corporate-gifts',
-    image: '/assets/aistudio/08-Corporate-Gifts-and-Promotional-Items_f68d016a.webp',
+    image: '/images/optimized/port-corporate-gifts.webp',
     description: 'Exclusive executive gift sets featuring leather-bound diaries, laser-engraved metal pens, thermal mugs, and key rings.',
     specs: {
       material: 'PU Leather + Stainless Steel + Bamboo',
