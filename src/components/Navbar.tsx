@@ -4,7 +4,8 @@ import { BrandLogo } from './BrandLogo';
 import { UaeFlag } from './UaeFlag';
 import { Language } from '../types';
 import { PageRoute } from '../types/routes';
-import { TRANSLATIONS, SERVICES_DATA } from '../data/content';
+import { TRANSLATIONS } from '../data/content';
+import { useCms } from '../context/CmsContext';
 
 interface NavbarProps {
   lang: Language;
@@ -22,7 +23,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { content } = useCms();
   const t = TRANSLATIONS[lang];
+  const servicesList = content.services;
+  const displayPhone = content.branding.phonePrimary;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -43,7 +47,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-2xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 sm:h-24">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           
           {/* Logo */}
           <div className="flex-shrink-0 cursor-pointer py-1" onClick={() => handleNavClick('home')}>
@@ -83,7 +87,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onMouseLeave={() => setServicesOpen(false)}
                   className="absolute top-full left-0 rtl:left-auto rtl:right-0 mt-1 w-64 bg-white rounded-xl shadow-xl border border-gray-100 py-2.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
                 >
-                  {SERVICES_DATA.map((service) => (
+                  {servicesList.map((service) => (
                     <button
                       key={service.id}
                       onClick={() => handleNavClick('services', { serviceId: service.id })}
@@ -146,7 +150,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="hidden lg:flex items-center gap-6">
             {/* Phone & Location */}
             <a
-              href="tel:+971562612617"
+              href={`tel:${displayPhone}`}
               className="flex items-center gap-2.5 text-left rtl:text-right group"
             >
               <div className="w-9 h-9 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
@@ -154,7 +158,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
               <div className="leading-tight">
                 <span className="block text-sm font-bold text-gray-900 group-hover:text-amber-700 transition-colors">
-                  {t.topBar.phone}
+                  {displayPhone}
                 </span>
                 <span className="block text-xs text-gray-500 font-normal">
                   {t.topBar.location}
@@ -226,7 +230,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Quick service links inside mobile menu */}
             <div className="grid grid-cols-2 gap-1 px-4 py-1.5 bg-gray-50 rounded-xl my-1">
-              {SERVICES_DATA.map((srv) => (
+              {servicesList.map((srv) => (
                 <button
                   key={srv.id}
                   onClick={() => handleNavClick('services', { serviceId: srv.id })}

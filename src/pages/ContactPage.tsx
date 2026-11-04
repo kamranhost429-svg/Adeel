@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, MessageCircle, Send, CheckCircle2, Clock } from 'lucide-react';
 import { Language } from '../types';
+import { useCms } from '../context/CmsContext';
 
 interface ContactPageProps {
   lang: Language;
 }
 
 export const ContactPage: React.FC<ContactPageProps> = ({ lang }) => {
+  const { content } = useCms();
+  const { branding } = content;
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('+971 ');
@@ -27,7 +30,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang }) => {
           {lang === 'ar' ? 'تواصل معنا' : 'Get in Touch'}
         </span>
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 font-serif">
-          {lang === 'ar' ? 'يسعدنا تواصلكم واستقبال استفساراتكم' : 'Contact Al Adeel Advertising LLC'}
+          {lang === 'ar' ? `يسعدنا تواصلكم مع ${branding.brandNameAr}` : `Contact ${branding.brandNameEn}`}
         </h1>
         <p className="mt-3 text-base text-gray-600 max-w-2xl leading-relaxed">
           {lang === 'ar'
@@ -49,8 +52,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang }) => {
               </div>
               <div>
                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block">Direct Phone & WhatsApp</span>
-                <a href="tel:+971562612617" className="text-lg font-bold text-gray-900 hover:text-[#b87e2a] transition-colors block mt-0.5">
-                  +971 56 261 2617
+                <a href={`tel:${branding.phonePrimary}`} className="text-lg font-bold text-gray-900 hover:text-[#b87e2a] transition-colors block mt-0.5">
+                  {branding.phonePrimary}
                 </a>
                 <span className="text-xs text-gray-500 block mt-1">Direct sales, quotations & inquiries (Dubai, UAE)</span>
               </div>

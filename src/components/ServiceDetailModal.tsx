@@ -42,11 +42,11 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-            <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray-100 border border-gray-200">
+            <div className="rounded-xl overflow-hidden aspect-[4/3] bg-white border border-gray-200 flex items-center justify-center p-1 shadow-inner">
               <img
                 src={service.image}
                 alt={service.title}
-                className="w-full h-full object-cover object-center"
+                className="w-full h-full object-contain"
               />
             </div>
             <div className="space-y-3">

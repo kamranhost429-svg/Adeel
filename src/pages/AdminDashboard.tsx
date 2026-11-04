@@ -1,316 +1,219 @@
 import React, { useState } from 'react';
-import { 
-  LayoutDashboard, 
-  FileText, 
-  Briefcase, 
-  Settings, 
-  Phone, 
-  Mail, 
-  DollarSign, 
-  Users, 
-  CheckCircle2, 
-  Clock, 
-  Plus, 
-  Trash2, 
-  Edit3, 
-  MessageCircle, 
-  Search, 
-  TrendingUp, 
+import {
+  LayoutDashboard,
   Building2,
-  ShieldCheck,
-  Globe,
-  LayoutTemplate,
-  Sliders,
+  Sparkles,
+  Layers,
   Image as ImageIcon,
-  Save,
+  HelpCircle,
+  FolderDown,
+  RotateCcw,
+  Plus,
+  Trash2,
+  Edit3,
   Check,
+  Save,
+  Eye,
+  EyeOff,
+  Search,
+  Copy,
   Lock,
   LogOut,
-  User
+  Phone,
+  Mail,
+  MapPin,
+  Globe,
+  Share2,
+  Clock,
+  ArrowRight,
+  ExternalLink,
+  ShieldCheck,
+  CheckCircle2,
+  AlertCircle,
+  FileJson,
+  Upload
 } from 'lucide-react';
-import { Language } from '../types';
+import { Language, ServiceItem, PortfolioItem } from '../types';
+import { useCms, FaqItem } from '../context/CmsContext';
 
 interface AdminDashboardProps {
   lang: Language;
   onNavigate: (page: string) => void;
 }
 
-interface LeadItem {
-  id: string;
-  clientName: string;
-  companyName: string;
-  phone: string;
-  email: string;
-  service: string;
-  product: string;
-  quantity: number;
-  emirate: string;
-  totalAed: string;
-  status: 'New' | 'Contacted' | 'In Production' | 'Completed';
-  date: string;
-}
-
-interface PortfolioCMSItem {
-  id: string;
-  title: string;
-  category: string;
-  image: string;
-  description: string;
-}
-
-interface SeoPageConfig {
-  pageId: string;
-  pageName: string;
-  title: string;
-  description: string;
-  keywords: string;
-  ogImage: string;
-}
-
-interface PageContentConfig {
-  heroEyebrow: string;
-  heroTitle1: string;
-  heroTitle2: string;
-  heroSubtitle: string;
-  aboutHeading: string;
-  aboutText: string;
-}
-
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate }) => {
-  // Authentication State for Secure Login System
+  // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [usernameInput, setUsernameInput] = useState<string>('');
   const [passwordInput, setPasswordInput] = useState<string>('');
   const [loginError, setLoginError] = useState<string>('');
+
+  // CMS state
+  const {
+    content,
+    updateBranding,
+    updateHero,
+    addService,
+    updateService,
+    deleteService,
+    addPortfolioItem,
+    updatePortfolioItem,
+    deletePortfolioItem,
+    addFaq,
+    deleteFaq,
+    addMediaAsset,
+    exportJsonBackup,
+    importJsonBackup,
+    resetToDefaults,
+  } = useCms();
+
+  // Active tab state
+  const [activeTab, setActiveTab] = useState<
+    'overview' | 'branding' | 'hero' | 'services' | 'portfolio' | 'faqs' | 'media' | 'backup'
+  >('overview');
+
+  // Live preview toggle
+  const [showLivePreview, setShowLivePreview] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Form states for adding items
+  const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
+  const [editingPortfolioId, setEditingPortfolioId] = useState<string | null>(null);
+
+  // New Service Form
+  const [newService, setNewService] = useState<Partial<ServiceItem>>({
+    id: 'printing',
+    title: '',
+    badge: 'High Quality',
+    image: '/images/optimized/service-printing.webp',
+    description: '',
+    features: ['High Resolution Print', 'Fast Turnaround'],
+    materials: ['Artboard', 'Vinyl'],
+    turnaround: '24-48 Hours',
+    popularItems: ['Item 1', 'Item 2'],
+  });
+
+  // New Portfolio Item Form
+  const [newPortfolio, setNewPortfolio] = useState<Partial<PortfolioItem>>({
+    id: `port-${Date.now()}`,
+    title: '',
+    category: 'printing',
+    image: '/images/optimized/port-printing.webp',
+    description: '',
+    specs: {
+      material: 'Standard Substrate',
+      finish: 'Matte Lamination',
+      turnaround: '2-3 Days',
+      minOrder: '100 Units',
+    },
+    tags: ['Custom Print', 'Dubai'],
+  });
+
+  // New FAQ Form
+  const [newFaq, setNewFaq] = useState<{
+    questionEn: string;
+    answerEn: string;
+    questionAr: string;
+    answerAr: string;
+  }>({
+    questionEn: '',
+    answerEn: '',
+    questionAr: '',
+    answerAr: '',
+  });
+
+  // New Media URL Input
+  const [customMediaUrl, setCustomMediaUrl] = useState<string>('');
+
+  // JSON Import Input
+  const [jsonInput, setJsonInput] = useState<string>('');
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (usernameInput.trim().toLowerCase() === 'admin' && passwordInput === 'aladeel2026') {
       setIsAuthenticated(true);
       setLoginError('');
+      showToast('Welcome back, Administrator!');
     } else {
-      setLoginError(lang === 'ar' ? 'اسم المستخدم أو كلمة المرور غير صحيحة (التجربة: admin / aladeel2026)' : 'Invalid credentials. Try username: admin, password: aladeel2026');
+      setLoginError(
+        lang === 'ar'
+          ? 'اسم المستخدم أو كلمة المرور غير صحيحة (التجربة: admin / aladeel2026)'
+          : 'Invalid credentials. Username: admin, Password: aladeel2026'
+      );
     }
   };
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'leads' | 'seo' | 'pages' | 'portfolio' | 'services' | 'settings'>('overview');
-  
-  // Mock Leads / Quotations Data
-  const [leads, setLeads] = useState<LeadItem[]>([
-    {
-      id: 'LD-1001',
-      clientName: 'Rashid Al Maktoum',
-      companyName: 'Dubai Marina Towers',
-      phone: '+971 50 123 4567',
-      email: 'rashid@dubaimarina.ae',
-      service: 'Printing',
-      product: 'Luxury Business Cards (Velvet & Foil)',
-      quantity: 1000,
-      emirate: 'Dubai',
-      totalAed: 'AED 342.00',
-      status: 'New',
-      date: '2026-10-31 10:30',
-    },
-    {
-      id: 'LD-1002',
-      clientName: 'Sarah Jenkins',
-      companyName: 'Emirates Hospitality Group',
-      phone: '+971 55 987 6543',
-      email: 's.jenkins@emirateshg.com',
-      service: 'Embroidery',
-      product: 'Executive Polo Shirts with Chest Embroidery',
-      quantity: 100,
-      emirate: 'Abu Dhabi',
-      totalAed: 'AED 3,150.00',
-      status: 'In Production',
-      date: '2026-10-30 14:15',
-    },
-    {
-      id: 'LD-1003',
-      clientName: 'Tariq Al Hashimi',
-      companyName: 'Gulf Star Contracting',
-      phone: '+971 56 261 2617',
-      email: 'tariq@gulfstar.ae',
-      service: 'Advertising',
-      product: '3D LED Backlit Channel Letters Signage',
-      quantity: 1,
-      emirate: 'Sharjah',
-      totalAed: 'AED 4,200.00',
-      status: 'Contacted',
-      date: '2026-10-29 09:45',
-    },
-  ]);
-
-  // SEO Manager State
-  const [seoPages, setSeoPages] = useState<SeoPageConfig[]>([
-    {
-      pageId: 'home',
-      pageName: 'Home Page',
-      title: 'Al Adeel Advertising LLC | Printing, Embroidery & Advertising Solutions in UAE',
-      description: 'High-quality custom branding solutions in UAE: Printing, Embroidery, Signage, Corporate Gifts, and Vehicle Branding under one roof in Dubai.',
-      keywords: 'printing dubai, embroidery uae, advertising agency dubai, signage, corporate gifts uae',
-      ogImage: '/images/hero-banner-exact.png',
-    },
-    {
-      pageId: 'services',
-      pageName: 'Services Page',
-      title: 'Our Services - Printing, Embroidery & Advertising | Al Adeel UAE',
-      description: 'Explore our comprehensive printing, Tajima embroidery, 3D channel signage, vehicle wraps, and corporate gift solutions in Dubai.',
-      keywords: 'commercial printing dubai, polo embroidery, vehicle wrapping uae',
-      ogImage: '/images/service-printing.png',
-    },
-    {
-      pageId: 'portfolio',
-      pageName: 'Portfolio Gallery',
-      title: 'Recent Projects & Gallery | Al Adeel Advertising LLC Dubai',
-      description: 'View our recent work: luxury business cards, embroidered uniforms, storefront signs, and branded fleet vehicles across UAE emirates.',
-      keywords: 'portfolio, brand projects dubai, signage gallery',
-      ogImage: '/images/portfolio-store-signage.png',
-    },
-    {
-      pageId: 'about',
-      pageName: 'About Us Page',
-      title: 'About Al Adeel Advertising LLC | Dubai Production Facility',
-      description: 'Learn about our state-of-the-art production plant in Dubai, advanced multi-head Tajima machinery, and expert branding team.',
-      keywords: 'about al adeel, printing press dubai, advertising company uae',
-      ogImage: '/images/cta-banner.png',
-    },
-    {
-      pageId: 'contact',
-      pageName: 'Contact Us Page',
-      title: 'Contact Al Adeel Advertising LLC | Dubai, UAE',
-      description: 'Get in touch with our sales and production team in Dubai. Call +971 56 261 2617 or email info@aladeeladvertising.com.',
-      keywords: 'contact al adeel, location dubai, phone number',
-      ogImage: '/images/logo.png',
-    },
-  ]);
-  const [selectedSeoPage, setSelectedSeoPage] = useState<string>('home');
-
-  // Page Content CMS State
-  const [pageContent, setPageContent] = useState<PageContentConfig>({
-    heroEyebrow: 'YOUR VISION • OUR PRINT',
-    heroTitle1: 'Printing, Embroidery & Advertising Solutions',
-    heroTitle2: 'in UAE',
-    heroSubtitle: 'High-quality custom branding solutions to make your business stand out. From printing to embroidery and complete advertising services – all under one roof.',
-    aboutHeading: 'Your Trusted Partner for Complete Branding in Dubai & UAE',
-    aboutText: 'Al Adeel Advertising LLC is a premier full-service printing, embroidery, and advertising powerhouse located in the heart of Dubai.',
-  });
-
-  // Mock Portfolio CMS
-  const [portfolioItems, setPortfolioItems] = useState<PortfolioCMSItem[]>([
-    { id: '1', title: 'Luxury Business Cards & Gold Foil Stationery', category: 'printing', image: '/assets/aladeel/2c652956-7da9-4202-8a68-8f60648a4af5_0d1999c8.jpg', description: 'Velvet soft-touch lamination with embossed gold foil stamping.' },
-    { id: '2', title: 'Embroidered Polo Uniforms & Caps', category: 'embroidery', image: '/assets/aladeel/37895847-cabe-49b4-a74d-6ddb22dd5d01_2562c081.jpg', description: 'Heavy cotton pique polo shirts with Tajima 3D puff embroidery.' },
-    { id: '3', title: 'Storefront 3D Illuminated Signage', category: 'advertising', image: '/images/portfolio-store-signage.png', description: 'Cast acrylic letters with high-efficiency waterproof LED modules.' },
-    { id: '4', title: 'Full Commercial Fleet & Van Wrap', category: 'advertising', image: '/assets/aladeel/a05cbc49-b556-450b-879d-724970f0013e_8fc43049.jpg', description: '3M cast adhesive wrap film with UV protective laminate.' },
-  ]);
-  const [newPortfolioTitle, setNewPortfolioTitle] = useState('');
-  const [newPortfolioCategory, setNewPortfolioCategory] = useState('printing');
-  const [newPortfolioDesc, setNewPortfolioDesc] = useState('');
-
-  // Contact settings state
-  const [phoneSetting, setPhoneSetting] = useState('+971 56 261 2617');
-  const [emailInfo, setEmailInfo] = useState('info@aladeeladvertising.com');
-  const [emailAdeel, setEmailAdeel] = useState('adeel@aladeeladvertising.com');
-  const [emailCarina, setEmailCarina] = useState('carina@aladeeladvertising.com');
-  const [emailNoor, setEmailNoor] = useState('noor@aladeeladvertising.com');
-  const [savedMessage, setSavedMessage] = useState(false);
-
-  const handleStatusChange = (id: string, newStatus: LeadItem['status']) => {
-    setLeads(leads.map(l => l.id === id ? { ...l, status: newStatus } : l));
-  };
-
-  const handleDeleteLead = (id: string) => {
-    setLeads(leads.filter(l => l.id !== id));
-  };
-
-  const handleSaveSettings = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSavedMessage(true);
-    setTimeout(() => setSavedMessage(false), 3000);
-  };
-
-  const handleAddPortfolio = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newPortfolioTitle) return;
-    const newItem: PortfolioCMSItem = {
-      id: String(Date.now()),
-      title: newPortfolioTitle,
-      category: newPortfolioCategory,
-      image: '/images/portfolio-business-cards.png',
-      description: newPortfolioDesc || 'Custom branding solution designed and produced in Dubai.',
-    };
-    setPortfolioItems([...portfolioItems, newItem]);
-    setNewPortfolioTitle('');
-    setNewPortfolioDesc('');
-  };
-
-  const currentSeo = seoPages.find(s => s.pageId === selectedSeoPage) || seoPages[0];
-
-  // ==============================================================
-  // SECURE LOGIN SCREEN IF NOT AUTHENTICATED
-  // ==============================================================
+  // Login Gate Screen
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#051d13] flex items-center justify-center p-4" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-        <div className="max-w-md w-full bg-white rounded-3xl p-8 shadow-2xl border border-emerald-900/20 text-left rtl:text-right space-y-6">
-          <div className="text-center space-y-2">
-            <div className="w-16 h-16 rounded-2xl bg-[#051d13] text-amber-400 flex items-center justify-center mx-auto shadow-lg font-serif font-bold text-2xl border border-amber-400/30">
-              A
+      <div className="min-h-screen bg-[#081C15] flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 border border-amber-500/20 text-left rtl:text-right">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-[#0d2b1f] text-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg border border-amber-500/30">
+              <Lock className="w-8 h-8" />
             </div>
-            <h2 className="text-2xl font-extrabold text-gray-900 font-serif">Al Adeel Admin Secure Login</h2>
-            <p className="text-xs text-gray-500">Authorized personnel only (Dubai Production Facility)</p>
+            <h1 className="text-2xl font-bold font-serif text-gray-900">
+              Al Adeel Advanced CMS
+            </h1>
+            <p className="text-xs text-gray-500 mt-1">
+              Secure Control Center • Content & Media Management System
+            </p>
           </div>
 
           {loginError && (
-            <div className="p-3 rounded-xl bg-red-50 text-red-700 text-xs font-bold text-center">
-              {loginError}
+            <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span>{loginError}</span>
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-5">
             <div>
-              <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Username / Admin ID</label>
-              <div className="relative">
-                <User className="absolute left-3.5 top-3 w-4 h-4 text-gray-400 rtl:left-auto rtl:right-3.5" />
-                <input
-                  type="text"
-                  placeholder="admin"
-                  value={usernameInput}
-                  onChange={(e) => setUsernameInput(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-hidden rtl:pl-4 rtl:pr-10"
-                  required
-                />
-              </div>
+              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+                Admin Username
+              </label>
+              <input
+                type="text"
+                value={usernameInput}
+                onChange={(e) => setUsernameInput(e.target.value)}
+                placeholder="e.g. admin"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                required
+              />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Security Password</label>
-              <div className="relative">
-                <Lock className="absolute left-3.5 top-3 w-4 h-4 text-gray-400 rtl:left-auto rtl:right-3.5" />
-                <input
-                  type="password"
-                  placeholder="aladeel2026"
-                  value={passwordInput}
-                  onChange={(e) => setPasswordInput(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-hidden rtl:pl-4 rtl:pr-10"
-                  required
-                />
-              </div>
-              <span className="text-[11px] text-gray-400 mt-1 block">Default demo credentials: username: <strong>admin</strong>, password: <strong>aladeel2026</strong></span>
+              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+                Security Password
+              </label>
+              <input
+                type="password"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                placeholder="••••••••••••"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                required
+              />
             </div>
 
             <button
               type="submit"
-              className="w-full py-3 rounded-xl bg-[#b87e2a] hover:bg-[#a36e22] text-white font-bold text-sm shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-3.5 rounded-xl bg-[#b87e2a] hover:bg-[#a36e22] text-white font-bold text-sm shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
             >
-              <ShieldCheck className="w-4 h-4" /> Secure Admin Login
+              <ShieldCheck className="w-4 h-4" />
+              <span>Unlock Advanced CMS</span>
             </button>
           </form>
 
-          <div className="pt-4 border-t border-gray-100 text-center">
+          <div className="mt-8 pt-6 border-t border-gray-100 text-center">
             <button
               onClick={() => onNavigate('home')}
-              className="text-xs font-bold text-gray-600 hover:text-amber-700 transition-colors cursor-pointer"
+              className="text-xs text-amber-800 hover:text-amber-900 font-semibold cursor-pointer"
             >
               ← Return to Main Website
             </button>
@@ -320,704 +223,929 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
     );
   }
 
-  // ==============================================================
-  // AUTHENTICATED DASHBOARD & CMS PRO
-  // ==============================================================
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row text-left rtl:text-right" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      
-      {/* Sidebar Navigation */}
-      <aside className="w-full md:w-64 bg-[#051d13] text-gray-300 flex-shrink-0 p-6 flex flex-col justify-between">
-        <div>
-          <div className="flex items-center gap-3 pb-6 border-b border-emerald-900/60 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-amber-600 text-white flex items-center justify-center font-bold text-lg shadow-md">
-              A
-            </div>
-            <div>
-              <h3 className="font-serif font-bold text-white text-sm">Advanced CMS Pro</h3>
-              <span className="text-[11px] text-emerald-400 block">Al Adeel Advertising LLC</span>
-            </div>
+    <div className="min-h-screen bg-gray-100 flex flex-col font-sans">
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed top-5 right-5 z-50 bg-[#081C15] text-amber-300 px-5 py-3 rounded-2xl shadow-2xl border border-amber-500/40 text-xs font-bold flex items-center gap-2 animate-in fade-in slide-in-from-top-3">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Top CMS Header */}
+      <header className="bg-[#081C15] text-white border-b border-amber-500/20 px-4 sm:px-8 py-4 flex items-center justify-between sticky top-0 z-30 shadow-md">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#0d2b1f] border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold font-serif text-lg">
+            A
           </div>
-
-          <nav className="space-y-1.5">
-            <button
-              onClick={() => setActiveTab('overview')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors cursor-pointer ${
-                activeTab === 'overview' ? 'bg-[#b87e2a] text-white shadow-md' : 'hover:bg-emerald-950 text-gray-300'
-              }`}
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              <span>{lang === 'ar' ? 'لوحة التحكم الرئيسية' : 'Dashboard Overview'}</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('leads')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors cursor-pointer ${
-                activeTab === 'leads' ? 'bg-[#b87e2a] text-white shadow-md' : 'hover:bg-emerald-950 text-gray-300'
-              }`}
-            >
-              <FileText className="w-4 h-4" />
-              <span>{lang === 'ar' ? 'استفسارات ورسائل العملاء' : 'Client Inquiries'}</span>
-              <span className="ml-auto bg-amber-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
-                {leads.length}
-              </span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('seo')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors cursor-pointer ${
-                activeTab === 'seo' ? 'bg-[#b87e2a] text-white shadow-md' : 'hover:bg-emerald-950 text-gray-300'
-              }`}
-            >
-              <Globe className="w-4 h-4" />
-              <span>{lang === 'ar' ? 'إدارة السيو (SEO Manager)' : 'SEO & Meta Tags'}</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('pages')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors cursor-pointer ${
-                activeTab === 'pages' ? 'bg-[#b87e2a] text-white shadow-md' : 'hover:bg-emerald-950 text-gray-300'
-              }`}
-            >
-              <LayoutTemplate className="w-4 h-4" />
-              <span>{lang === 'ar' ? 'محرر محتوى الصفحات' : 'Page Content CMS'}</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('portfolio')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors cursor-pointer ${
-                activeTab === 'portfolio' ? 'bg-[#b87e2a] text-white shadow-md' : 'hover:bg-emerald-950 text-gray-300'
-              }`}
-            >
-              <Briefcase className="w-4 h-4" />
-              <span>{lang === 'ar' ? 'إدارة معرض الأعمال' : 'Portfolio Manager'}</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('services')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors cursor-pointer ${
-                activeTab === 'services' ? 'bg-[#b87e2a] text-white shadow-md' : 'hover:bg-emerald-950 text-gray-300'
-              }`}
-            >
-              <DollarSign className="w-4 h-4" />
-              <span>{lang === 'ar' ? 'إدارة الأسعار والخدمات' : 'Services & Pricing'}</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('settings')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors cursor-pointer ${
-                activeTab === 'settings' ? 'bg-[#b87e2a] text-white shadow-md' : 'hover:bg-emerald-950 text-gray-300'
-              }`}
-            >
-              <Settings className="w-4 h-4" />
-              <span>{lang === 'ar' ? 'إعدادات الاتصال والفرق' : 'Contact Settings'}</span>
-            </button>
-          </nav>
-        </div>
-
-        <div className="pt-6 border-t border-emerald-900/65 space-y-3">
-          <button
-            onClick={() => setIsAuthenticated(false)}
-            className="w-full py-2.5 px-4 rounded-xl bg-red-950/80 hover:bg-red-900 text-red-200 text-xs font-bold transition-colors flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>{lang === 'ar' ? 'تسجيل الخروج (Logout)' : 'Admin Logout'}</span>
-          </button>
-
-          <button
-            onClick={() => onNavigate('home')}
-            className="w-full py-2.5 px-4 rounded-xl bg-emerald-950 hover:bg-emerald-900 text-emerald-200 text-xs font-bold transition-colors flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <span>← {lang === 'ar' ? 'العودة للموقع الرئيسي' : 'Back to Website'}</span>
-          </button>
-        </div>
-      </aside>
-
-      {/* Main Content Area */}
-      <main className="flex-1 p-6 lg:p-10 overflow-y-auto">
-        
-        {/* Top Header Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-8 border-b border-gray-200 gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 font-serif">
-              {activeTab === 'overview' && (lang === 'ar' ? 'لوحة القيادة والأداء العام' : 'Advanced Dashboard Overview')}
-              {activeTab === 'leads' && (lang === 'ar' ? 'إدارة طلبات الأسعار والعملاء المحتملين' : 'Quotation Leads & Inquiries')}
-              {activeTab === 'seo' && (lang === 'ar' ? 'إدارة محرك البحث والسيو (SEO & Meta Tags)' : 'SEO & Meta Tag Manager')}
-              {activeTab === 'pages' && (lang === 'ar' ? 'محرر محتوى صفحات الموقع (Page Content CMS)' : 'Page Content Editor CMS')}
-              {activeTab === 'portfolio' && (lang === 'ar' ? 'إدارة معرض الأعمال والمشاريع' : 'Portfolio & Gallery Manager')}
-              {activeTab === 'services' && (lang === 'ar' ? 'إدارة الخدمات والأسعار التنافسية' : 'Services & Pricing Engine')}
-              {activeTab === 'settings' && (lang === 'ar' ? 'إعدادات الاتصال والفرق' : 'Contact Details & Team Emails')}
+            <h1 className="text-base sm:text-lg font-bold font-serif leading-tight">
+              Al Adeel Advanced CMS
             </h1>
-            <p className="text-xs sm:text-sm text-gray-500 mt-1">
-              {lang === 'ar' 
-                ? 'نظام إدارة محتوى متقدم (CMS) للتحكم الكامل بموقع شركة العادل'
-                : 'Advanced CMS studio for full control over SEO, page text, portfolio items, and leads.'}
+            <p className="text-[11px] text-amber-400/80 font-medium hidden sm:block">
+              Full Site Dynamic Content & Media Control Panel
             </p>
           </div>
-
-          <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>{lang === 'ar' ? 'المشرف مسجل الدخول' : 'Authenticated as Admin'}</span>
-            </span>
-          </div>
         </div>
 
-        {/* ========================================================== */}
-        {/* TAB 1: OVERVIEW & STATS                                    */}
-        {/* ========================================================== */}
-        {activeTab === 'overview' && (
-          <div className="space-y-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              
-              <div className="p-6 bg-white rounded-2xl border border-gray-200 shadow-xs flex items-center justify-between">
-                <div>
-                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Inquiries</span>
-                  <h3 className="text-3xl font-extrabold text-gray-900 mt-1">{leads.length + 24}</h3>
-                  <span className="text-xs text-emerald-600 font-semibold mt-1 block">↑ +18% this month</span>
-                </div>
-                <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
-                  <Users className="w-6 h-6" />
-                </div>
-              </div>
+        <div className="flex items-center gap-3">
+          {/* Live Preview Toggle */}
+          <button
+            onClick={() => setShowLivePreview(!showLivePreview)}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              showLivePreview
+                ? 'bg-amber-500 text-gray-900 shadow-lg'
+                : 'bg-white/10 hover:bg-white/20 text-white'
+            }`}
+          >
+            {showLivePreview ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+            <span className="hidden sm:inline">
+              {showLivePreview ? 'Close Live Preview' : 'Split Live Preview'}
+            </span>
+          </button>
 
-              <div className="p-6 bg-white rounded-2xl border border-gray-200 shadow-xs flex items-center justify-between">
-                <div>
-                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Pipeline Value</span>
-                  <h3 className="text-3xl font-extrabold text-gray-900 mt-1">AED 48,950</h3>
-                  <span className="text-xs text-emerald-600 font-semibold mt-1 block">Active corporate orders</span>
-                </div>
-                <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
-                  <DollarSign className="w-6 h-6" />
-                </div>
-              </div>
+          {/* Return to Site */}
+          <button
+            onClick={() => onNavigate('home')}
+            className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+          >
+            <ExternalLink className="w-3.5 h-3.5" />
+            <span className="hidden md:inline">View Live Site</span>
+          </button>
 
-              <div className="p-6 bg-white rounded-2xl border border-gray-200 shadow-xs flex items-center justify-between">
-                <div>
-                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Active Production</span>
-                  <h3 className="text-3xl font-extrabold text-gray-900 mt-1">12 Orders</h3>
-                  <span className="text-xs text-amber-600 font-semibold mt-1 block">Tajima & UV Printing</span>
-                </div>
-                <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6" />
-                </div>
-              </div>
+          {/* Logout */}
+          <button
+            onClick={() => setIsAuthenticated(false)}
+            className="p-2 rounded-xl bg-red-900/40 hover:bg-red-800/60 text-red-200 transition-colors cursor-pointer"
+            title="Logout"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
+        </div>
+      </header>
 
-              <div className="p-6 bg-white rounded-2xl border border-gray-200 shadow-xs flex items-center justify-between">
-                <div>
-                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">WhatsApp Inquiries</span>
-                  <h3 className="text-3xl font-extrabold text-gray-900 mt-1">142</h3>
-                  <span className="text-xs text-emerald-600 font-semibold mt-1 block">+971 56 261 2617 active</span>
-                </div>
-                <div className="w-12 h-12 rounded-xl bg-emerald-500 text-white flex items-center justify-center">
-                  <MessageCircle className="w-6 h-6" />
-                </div>
-              </div>
-
-            </div>
-
-            {/* Recent Leads Table Preview */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-xs">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold font-serif text-gray-900">Recent Quotation Requests</h3>
-                <button
-                  onClick={() => setActiveTab('leads')}
-                  className="text-xs font-bold text-[#b87e2a] hover:underline cursor-pointer"
-                >
-                  View All Leads →
-                </button>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-left rtl:text-right text-xs">
-                  <thead className="bg-gray-50 text-gray-600 uppercase font-semibold">
-                    <tr>
-                      <th className="px-4 py-3">Lead ID</th>
-                      <th className="px-4 py-3">Client & Company</th>
-                      <th className="px-4 py-3">Service & Product</th>
-                      <th className="px-4 py-3">Emirate</th>
-                      <th className="px-4 py-3">Total AED</th>
-                      <th className="px-4 py-3">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {leads.map((lead) => (
-                      <tr key={lead.id} className="hover:bg-gray-50">
-                        <td className="px-4 py-3 font-bold text-gray-900">{lead.id}</td>
-                        <td className="px-4 py-3">
-                          <span className="font-bold text-gray-900 block">{lead.clientName}</span>
-                          <span className="text-gray-500 text-[11px]">{lead.companyName}</span>
-                        </td>
-                        <td className="px-4 py-3">
-                          <span className="font-semibold text-gray-800 block">{lead.service}</span>
-                          <span className="text-gray-500 text-[11px]">{lead.product} ({lead.quantity} units)</span>
-                        </td>
-                        <td className="px-4 py-3 text-gray-700 font-medium">{lead.emirate}</td>
-                        <td className="px-4 py-3 font-bold text-amber-700">{lead.totalAed}</td>
-                        <td className="px-4 py-3">
-                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                            lead.status === 'New' ? 'bg-amber-100 text-amber-800' :
-                            lead.status === 'In Production' ? 'bg-blue-100 text-blue-800' :
-                            'bg-emerald-100 text-emerald-800'
-                          }`}>
-                            {lead.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+      {/* Main CMS Layout (Sidebar + Work Area) */}
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+        {/* Navigation Sidebar */}
+        <aside className="w-full md:w-64 bg-[#081C15] text-gray-300 border-r border-amber-900/20 p-3 sm:p-4 space-y-1.5 flex-shrink-0">
+          <div className="text-[10px] font-bold text-amber-400 uppercase tracking-widest px-3 py-2 hidden md:block">
+            CMS Navigation
           </div>
-        )}
 
-        {/* ========================================================== */}
-        {/* TAB 2: QUOTATION LEADS & INQUIRIES                         */}
-        {/* ========================================================== */}
-        {activeTab === 'leads' && (
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-xs space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <h3 className="text-lg font-bold font-serif text-gray-900">All Client Quotation Requests</h3>
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-500">Total Leads: <strong>{leads.length}</strong></span>
+          <button
+            onClick={() => setActiveTab('overview')}
+            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === 'overview'
+                ? 'bg-[#b87e2a] text-white shadow-md'
+                : 'hover:bg-white/5 text-gray-300'
+            }`}
+          >
+            <LayoutDashboard className="w-4 h-4 text-amber-400" />
+            <span>Dashboard Overview</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('branding')}
+            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === 'branding'
+                ? 'bg-[#b87e2a] text-white shadow-md'
+                : 'hover:bg-white/5 text-gray-300'
+            }`}
+          >
+            <Building2 className="w-4 h-4 text-amber-400" />
+            <span>Branding & Contacts</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('hero')}
+            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === 'hero'
+                ? 'bg-[#b87e2a] text-white shadow-md'
+                : 'hover:bg-white/5 text-gray-300'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-amber-400" />
+            <span>Hero Banner CMS</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('services')}
+            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === 'services'
+                ? 'bg-[#b87e2a] text-white shadow-md'
+                : 'hover:bg-white/5 text-gray-300'
+            }`}
+          >
+            <Layers className="w-4 h-4 text-amber-400" />
+            <span>Services Catalog</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('portfolio')}
+            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === 'portfolio'
+                ? 'bg-[#b87e2a] text-white shadow-md'
+                : 'hover:bg-white/5 text-gray-300'
+            }`}
+          >
+            <ImageIcon className="w-4 h-4 text-amber-400" />
+            <span>Portfolio Showcase</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('faqs')}
+            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === 'faqs'
+                ? 'bg-[#b87e2a] text-white shadow-md'
+                : 'hover:bg-white/5 text-gray-300'
+            }`}
+          >
+            <HelpCircle className="w-4 h-4 text-amber-400" />
+            <span>FAQs & Why Choose</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('media')}
+            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === 'media'
+                ? 'bg-[#b87e2a] text-white shadow-md'
+                : 'hover:bg-white/5 text-gray-300'
+            }`}
+          >
+            <FolderDown className="w-4 h-4 text-amber-400" />
+            <span>Media Asset Library</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('backup')}
+            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === 'backup'
+                ? 'bg-[#b87e2a] text-white shadow-md'
+                : 'hover:bg-white/5 text-gray-300'
+            }`}
+          >
+            <FileJson className="w-4 h-4 text-amber-400" />
+            <span>Backup & Export</span>
+          </button>
+        </aside>
+
+        {/* Content Work Area */}
+        <main
+          className={`flex-1 overflow-y-auto p-4 sm:p-8 bg-gray-50 transition-all ${
+            showLivePreview ? 'w-full md:w-1/2' : 'w-full'
+          }`}
+        >
+          {/* OVERVIEW TAB */}
+          {activeTab === 'overview' && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold font-serif text-gray-900">
+                  CMS Control Overview
+                </h2>
+                <p className="text-xs text-gray-500 mt-1">
+                  Real-time status of Al Adeel Advertising dynamic website content
+                </p>
+              </div>
+
+              {/* Stat Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-2xs">
+                  <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">
+                    Active Services
+                  </span>
+                  <span className="text-2xl font-bold text-gray-900 font-mono">
+                    {content.services.length}
+                  </span>
+                </div>
+
+                <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-2xs">
+                  <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">
+                    Portfolio Projects
+                  </span>
+                  <span className="text-2xl font-bold text-gray-900 font-mono">
+                    {content.portfolio.length}
+                  </span>
+                </div>
+
+                <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-2xs">
+                  <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">
+                    Media Library Assets
+                  </span>
+                  <span className="text-2xl font-bold text-gray-900 font-mono">
+                    {content.mediaAssets.length}
+                  </span>
+                </div>
+
+                <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-2xs">
+                  <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">
+                    Active FAQs
+                  </span>
+                  <span className="text-2xl font-bold text-gray-900 font-mono">
+                    {content.faqs.length}
+                  </span>
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="bg-[#081C15] text-white p-6 rounded-3xl border border-amber-500/20 shadow-xl space-y-4">
+                <h3 className="text-lg font-bold font-serif text-amber-400">
+                  Quick Management Actions
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <button
+                    onClick={() => setActiveTab('services')}
+                    className="p-4 rounded-xl bg-white/10 hover:bg-white/20 text-left text-xs font-semibold transition-all border border-amber-500/20 cursor-pointer"
+                  >
+                    🛠️ Edit Services & Pricing Specs →
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('portfolio')}
+                    className="p-4 rounded-xl bg-white/10 hover:bg-white/20 text-left text-xs font-semibold transition-all border border-amber-500/20 cursor-pointer"
+                  >
+                    🖼️ Add/Update Portfolio Projects →
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('branding')}
+                    className="p-4 rounded-xl bg-white/10 hover:bg-white/20 text-left text-xs font-semibold transition-all border border-amber-500/20 cursor-pointer"
+                  >
+                    📞 Update Phone, WhatsApp & Address →
+                  </button>
+                </div>
               </div>
             </div>
+          )}
 
-            <div className="space-y-4">
-              {leads.map((lead) => (
-                <div key={lead.id} className="p-5 rounded-2xl border border-gray-200 bg-gray-50/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-extrabold text-amber-700">{lead.id}</span>
-                      <span className="text-xs text-gray-400">• {lead.date}</span>
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                        lead.status === 'New' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'
-                      }`}>
-                        {lead.status}
-                      </span>
-                    </div>
+          {/* BRANDING & CONTACTS TAB */}
+          {activeTab === 'branding' && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold font-serif text-gray-900">
+                  Site Identity & Contact Information
+                </h2>
+                <p className="text-xs text-gray-500 mt-1">
+                  Updates instantly across Navbar, Footer, Contact Page, and Modals
+                </p>
+              </div>
 
-                    <h4 className="text-base font-bold text-gray-900">{lead.clientName} <span className="text-xs text-gray-500 font-normal">({lead.companyName})</span></h4>
-                    
-                    <p className="text-xs text-gray-600 font-medium">
-                      Service: <strong className="text-gray-900">{lead.service}</strong> → {lead.product} ({lead.quantity} units) | Delivery: {lead.emirate}
-                    </p>
-
-                    <div className="flex items-center gap-4 text-xs text-gray-500 pt-1">
-                      <a href={`tel:${lead.phone}`} className="flex items-center gap-1 hover:text-amber-700 font-bold">
-                        <Phone className="w-3.5 h-3.5" /> {lead.phone}
-                      </a>
-                      <a href={`mailto:${lead.email}`} className="flex items-center gap-1 hover:text-amber-700 font-bold">
-                        <Mail className="w-3.5 h-3.5" /> {lead.email}
-                      </a>
-                    </div>
+              <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-2xs space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      Brand Name (English)
+                    </label>
+                    <input
+                      type="text"
+                      value={content.branding.brandNameEn}
+                      onChange={(e) => updateBranding({ brandNameEn: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
                   </div>
 
-                  <div className="flex flex-col sm:flex-row items-center gap-3">
-                    <div className="text-right rtl:text-left">
-                      <span className="text-xs text-gray-400 block">Total Quotation</span>
-                      <strong className="text-lg font-extrabold text-amber-700">{lead.totalAed}</strong>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      Brand Name (Arabic)
+                    </label>
+                    <input
+                      type="text"
+                      dir="rtl"
+                      value={content.branding.brandNameAr}
+                      onChange={(e) => updateBranding({ brandNameAr: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      Tagline (English)
+                    </label>
+                    <input
+                      type="text"
+                      value={content.branding.taglineEn}
+                      onChange={(e) => updateBranding({ taglineEn: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      Tagline (Arabic)
+                    </label>
+                    <input
+                      type="text"
+                      dir="rtl"
+                      value={content.branding.taglineAr}
+                      onChange={(e) => updateBranding({ taglineAr: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+                </div>
+
+                <hr className="border-gray-100" />
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      Primary Phone
+                    </label>
+                    <input
+                      type="text"
+                      value={content.branding.phonePrimary}
+                      onChange={(e) => updateBranding({ phonePrimary: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      Secondary Phone
+                    </label>
+                    <input
+                      type="text"
+                      value={content.branding.phoneSecondary}
+                      onChange={(e) => updateBranding({ phoneSecondary: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      WhatsApp Number
+                    </label>
+                    <input
+                      type="text"
+                      value={content.branding.whatsappNumber}
+                      onChange={(e) => updateBranding({ whatsappNumber: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      Official Email Address
+                    </label>
+                    <input
+                      type="email"
+                      value={content.branding.email}
+                      onChange={(e) => updateBranding({ email: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      Google Maps URL
+                    </label>
+                    <input
+                      type="text"
+                      value={content.branding.googleMapsUrl}
+                      onChange={(e) => updateBranding({ googleMapsUrl: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      Office Address (English)
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={content.branding.addressEn}
+                      onChange={(e) => updateBranding({ addressEn: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      Office Address (Arabic)
+                    </label>
+                    <textarea
+                      rows={2}
+                      dir="rtl"
+                      value={content.branding.addressAr}
+                      onChange={(e) => updateBranding({ addressAr: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-end pt-2">
+                  <button
+                    onClick={() => showToast('Branding and Contact settings saved successfully!')}
+                    className="px-6 py-2.5 rounded-xl bg-[#b87e2a] hover:bg-[#a36e22] text-white text-xs font-bold shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <Save className="w-4 h-4" />
+                    <span>Save Branding Settings</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* HERO BANNER CMS TAB */}
+          {activeTab === 'hero' && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold font-serif text-gray-900">
+                  Hero Banner Content Manager
+                </h2>
+                <p className="text-xs text-gray-500 mt-1">
+                  Customize the main landing headline, badges, and background media
+                </p>
+              </div>
+
+              <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-2xs space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      Eyebrow Kicker (English)
+                    </label>
+                    <input
+                      type="text"
+                      value={content.hero.eyebrowEn}
+                      onChange={(e) => updateHero({ eyebrowEn: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      Eyebrow Kicker (Arabic)
+                    </label>
+                    <input
+                      type="text"
+                      dir="rtl"
+                      value={content.hero.eyebrowAr}
+                      onChange={(e) => updateHero({ eyebrowAr: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      Headline Part 1 (English)
+                    </label>
+                    <input
+                      type="text"
+                      value={content.hero.title1En}
+                      onChange={(e) => updateHero({ title1En: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      Headline Part 1 (Arabic)
+                    </label>
+                    <input
+                      type="text"
+                      dir="rtl"
+                      value={content.hero.title1Ar}
+                      onChange={(e) => updateHero({ title1Ar: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      Headline Subtitle (English)
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={content.hero.subtitleEn}
+                      onChange={(e) => updateHero({ subtitleEn: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                      Headline Subtitle (Arabic)
+                    </label>
+                    <textarea
+                      rows={3}
+                      dir="rtl"
+                      value={content.hero.subtitleAr}
+                      onChange={(e) => updateHero({ subtitleAr: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                    Hero Background Image URL
+                  </label>
+                  <input
+                    type="text"
+                    value={content.hero.heroBgImage}
+                    onChange={(e) => updateHero({ heroBgImage: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500"
+                  />
+                </div>
+
+                <div className="flex justify-end pt-2">
+                  <button
+                    onClick={() => showToast('Hero Banner content updated!')}
+                    className="px-6 py-2.5 rounded-xl bg-[#b87e2a] hover:bg-[#a36e22] text-white text-xs font-bold shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <Save className="w-4 h-4" />
+                    <span>Save Hero Content</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* SERVICES CATALOG CMS TAB */}
+          {activeTab === 'services' && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold font-serif text-gray-900">
+                    Services Catalog Manager
+                  </h2>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Add, edit, or customize core business capabilities
+                  </p>
+                </div>
+              </div>
+
+              {/* Service Cards List */}
+              <div className="space-y-4">
+                {content.services.map((srv) => (
+                  <div
+                    key={srv.id}
+                    className="bg-white p-5 rounded-2xl border border-gray-200 shadow-2xs space-y-4"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={srv.image}
+                          alt={srv.title}
+                          className="w-12 h-12 rounded-xl object-cover border border-gray-200"
+                        />
+                        <div>
+                          <h3 className="text-base font-bold text-gray-900">{srv.title}</h3>
+                          <span className="text-xs text-amber-700 font-semibold">{srv.badge}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => setEditingServiceId(editingServiceId === srv.id ? null : srv.id)}
+                          className="px-3 py-1.5 rounded-lg bg-amber-50 text-amber-900 hover:bg-amber-100 text-xs font-bold transition-all cursor-pointer flex items-center gap-1"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                          <span>{editingServiceId === srv.id ? 'Close' : 'Edit'}</span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            deleteService(srv.id);
+                            showToast(`Service "${srv.title}" deleted.`);
+                          }}
+                          className="p-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-all cursor-pointer"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <a
-                        href={`https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=Hello%20${lead.clientName},%20regarding%20your%20quotation%20for%20${lead.service}%20(${lead.totalAed}).`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 transition-colors"
-                      >
-                        <MessageCircle className="w-4 h-4" /> WhatsApp
-                      </a>
+                    {/* Inline Editor for Service */}
+                    {editingServiceId === srv.id && (
+                      <div className="p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-4 text-xs animate-in fade-in">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block font-bold text-gray-700 mb-1">Title</label>
+                            <input
+                              type="text"
+                              value={srv.title}
+                              onChange={(e) => updateService(srv.id, { title: e.target.value })}
+                              className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white"
+                            />
+                          </div>
 
-                      <select
-                        value={lead.status}
-                        onChange={(e) => handleStatusChange(lead.id, e.target.value as any)}
-                        className="px-3 py-2 rounded-xl bg-white border border-gray-300 text-xs font-bold text-gray-700 cursor-pointer"
-                      >
-                        <option value="New">New</option>
-                        <option value="Contacted">Contacted</option>
-                        <option value="In Production">In Production</option>
-                        <option value="Completed">Completed</option>
-                      </select>
+                          <div>
+                            <label className="block font-bold text-gray-700 mb-1">Badge</label>
+                            <input
+                              type="text"
+                              value={srv.badge}
+                              onChange={(e) => updateService(srv.id, { badge: e.target.value })}
+                              className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white"
+                            />
+                          </div>
+                        </div>
 
+                        <div>
+                          <label className="block font-bold text-gray-700 mb-1">Description</label>
+                          <textarea
+                            rows={2}
+                            value={srv.description}
+                            onChange={(e) => updateService(srv.id, { description: e.target.value })}
+                            className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block font-bold text-gray-700 mb-1">Turnaround Time</label>
+                            <input
+                              type="text"
+                              value={srv.turnaround}
+                              onChange={(e) => updateService(srv.id, { turnaround: e.target.value })}
+                              className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block font-bold text-gray-700 mb-1">Image URL</label>
+                            <input
+                              type="text"
+                              value={srv.image}
+                              onChange={(e) => updateService(srv.id, { image: e.target.value })}
+                              className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex justify-end">
+                          <button
+                            onClick={() => {
+                              setEditingServiceId(null);
+                              showToast(`Service "${srv.title}" saved!`);
+                            }}
+                            className="px-4 py-2 rounded-lg bg-[#b87e2a] text-white font-bold cursor-pointer"
+                          >
+                            Save Changes
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* PORTFOLIO SHOWCASE CMS TAB */}
+          {activeTab === 'portfolio' && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold font-serif text-gray-900">
+                  Portfolio Showcase Manager
+                </h2>
+                <p className="text-xs text-gray-500 mt-1">
+                  Manage showcased projects, materials, finishes, and specs
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {content.portfolio.map((item) => (
+                  <div
+                    key={item.id}
+                    className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-2xs flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="aspect-[4/3] bg-gray-100 relative">
+                        <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                        <span className="absolute top-2 right-2 bg-black/70 text-white text-[10px] font-bold px-2 py-0.5 rounded-md uppercase">
+                          {item.category}
+                        </span>
+                      </div>
+                      <div className="p-4 space-y-2">
+                        <h3 className="font-bold text-sm text-gray-900">{item.title}</h3>
+                        <p className="text-xs text-gray-600 line-clamp-2">{item.description}</p>
+                      </div>
+                    </div>
+
+                    <div className="p-4 pt-0 flex items-center justify-between border-t border-gray-100">
+                      <span className="text-[11px] font-semibold text-gray-500">
+                        {item.specs.material}
+                      </span>
                       <button
-                        onClick={() => handleDeleteLead(lead.id)}
-                        aria-label="Delete Lead"
-                        className="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 transition-colors cursor-pointer"
+                        onClick={() => {
+                          deletePortfolioItem(item.id);
+                          showToast(`Portfolio item "${item.title}" removed.`);
+                        }}
+                        className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                        title="Delete Portfolio Item"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ========================================================== */}
-        {/* TAB 3: ADVANCED SEO MANAGER                                */}
-        {/* ========================================================== */}
-        {activeTab === 'seo' && (
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-xs space-y-6 max-w-4xl">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-4">
-              <div>
-                <h3 className="text-lg font-bold font-serif text-gray-900">Search Engine Optimization (SEO) & Meta Tags</h3>
-                <p className="text-xs text-gray-500">Manage page titles, meta descriptions, and OpenGraph tags for Dubai & UAE rankings.</p>
-              </div>
-              <div className="flex gap-2">
-                {seoPages.map((p) => (
-                  <button
-                    key={p.pageId}
-                    onClick={() => setSelectedSeoPage(p.pageId)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-colors ${
-                      selectedSeoPage === p.pageId ? 'bg-[#b87e2a] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    {p.pageName}
-                  </button>
                 ))}
               </div>
             </div>
+          )}
 
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              alert(`SEO settings for ${currentSeo.pageName} saved successfully!`);
-            }} className="space-y-4">
+          {/* FAQS & WHY CHOOSE TAB */}
+          {activeTab === 'faqs' && (
+            <div className="space-y-6">
               <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Meta Browser Title (&lt;title&gt;)</label>
-                <input
-                  type="text"
-                  value={currentSeo.title}
-                  onChange={(e) => {
-                    const updated = seoPages.map(s => s.pageId === selectedSeoPage ? { ...s, title: e.target.value } : s);
-                    setSeoPages(updated);
-                  }}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-hidden"
-                  required
-                />
+                <h2 className="text-2xl font-bold font-serif text-gray-900">
+                  FAQs & Client Trust Features
+                </h2>
+                <p className="text-xs text-gray-500 mt-1">
+                  Manage collapsible FAQ pairs for English and Arabic readers
+                </p>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Meta Description (&lt;meta name="description"&gt;)</label>
-                <textarea
-                  rows={3}
-                  value={currentSeo.description}
-                  onChange={(e) => {
-                    const updated = seoPages.map(s => s.pageId === selectedSeoPage ? { ...s, description: e.target.value } : s);
-                    setSeoPages(updated);
-                  }}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-hidden"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Target Keywords</label>
-                <input
-                  type="text"
-                  value={currentSeo.keywords}
-                  onChange={(e) => {
-                    const updated = seoPages.map(s => s.pageId === selectedSeoPage ? { ...s, keywords: e.target.value } : s);
-                    setSeoPages(updated);
-                  }}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-hidden"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase mb-1">OpenGraph Social Share Image URL (og:image)</label>
-                <input
-                  type="text"
-                  value={currentSeo.ogImage}
-                  onChange={(e) => {
-                    const updated = seoPages.map(s => s.pageId === selectedSeoPage ? { ...s, ogImage: e.target.value } : s);
-                    setSeoPages(updated);
-                  }}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-hidden"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="px-6 py-3 rounded-xl bg-[#b87e2a] hover:bg-[#a36e22] text-white font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer"
-              >
-                <Save className="w-4 h-4" /> Save SEO Config for {currentSeo.pageName}
-              </button>
-            </form>
-          </div>
-        )}
-
-        {/* ========================================================== */}
-        {/* TAB 4: PAGE CONTENT EDITOR (CMS)                           */}
-        {/* ========================================================== */}
-        {activeTab === 'pages' && (
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-xs space-y-6 max-w-4xl">
-            <div>
-              <h3 className="text-lg font-bold font-serif text-gray-900">Page Content & Heading Editor</h3>
-              <p className="text-xs text-gray-500">Edit key headlines, taglines, and banner text across the website in real-time.</p>
-            </div>
-
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              alert('Page content updated successfully!');
-            }} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Hero Eyebrow (e.g. YOUR VISION • OUR PRINT)</label>
-                <input
-                  type="text"
-                  value={pageContent.heroEyebrow}
-                  onChange={(e) => setPageContent({ ...pageContent, heroEyebrow: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-hidden"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Hero Title Line 1</label>
-                  <input
-                    type="text"
-                    value={pageContent.heroTitle1}
-                    onChange={(e) => setPageContent({ ...pageContent, heroTitle1: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-hidden"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Hero Title Highlight (in UAE)</label>
-                  <input
-                    type="text"
-                    value={pageContent.heroTitle2}
-                    onChange={(e) => setPageContent({ ...pageContent, heroTitle2: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-hidden"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Hero Subtitle Paragraph</label>
-                <textarea
-                  rows={3}
-                  value={pageContent.heroSubtitle}
-                  onChange={(e) => setPageContent({ ...pageContent, heroSubtitle: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-hidden"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase mb-1">About Us Heading</label>
-                <input
-                  type="text"
-                  value={pageContent.aboutHeading}
-                  onChange={(e) => setPageContent({ ...pageContent, aboutHeading: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-hidden"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="px-6 py-3 rounded-xl bg-[#b87e2a] hover:bg-[#a36e22] text-white font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer"
-              >
-                <Save className="w-4 h-4" /> Save Page Content CMS
-              </button>
-            </form>
-          </div>
-        )}
-
-        {/* ========================================================== */}
-        {/* TAB 5: PORTFOLIO & GALLERY MANAGER                         */}
-        {/* ========================================================== */}
-        {activeTab === 'portfolio' && (
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-xs space-y-8">
-            <div className="border-b border-gray-100 pb-6">
-              <h3 className="text-lg font-bold font-serif text-gray-900 mb-2">Add New Portfolio Project</h3>
-              <form onSubmit={handleAddPortfolio} className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Project Title</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Expo 2024 Branded Stand"
-                    value={newPortfolioTitle}
-                    onChange={(e) => setNewPortfolioTitle(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Category</label>
-                  <select
-                    value={newPortfolioCategory}
-                    onChange={(e) => setNewPortfolioCategory(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium cursor-pointer"
+              <div className="space-y-4">
+                {content.faqs.map((faq) => (
+                  <div
+                    key={faq.id}
+                    className="bg-white p-5 rounded-2xl border border-gray-200 shadow-2xs space-y-2"
                   >
-                    <option value="printing">Printing</option>
-                    <option value="embroidery">Embroidery</option>
-                    <option value="advertising">Advertising</option>
-                    <option value="signage">Signage</option>
-                    <option value="corporate-gifts">Corporate Gifts</option>
-                  </select>
-                </div>
-
-                <button
-                  type="submit"
-                  className="px-6 py-2.5 rounded-xl bg-[#b87e2a] hover:bg-[#a36e22] text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 cursor-pointer h-[42px]"
-                >
-                  <Plus className="w-4 h-4" /> Add Project
-                </button>
-              </form>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-bold font-serif text-gray-900 mb-4">Existing Portfolio Gallery Items</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {portfolioItems.map((item) => (
-                  <div key={item.id} className="rounded-2xl border border-gray-200 overflow-hidden bg-gray-50 flex flex-col justify-between">
-                    <div className="h-40 overflow-hidden relative">
-                      <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
-                      <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-xs text-[10px] font-bold text-amber-300 uppercase">
-                        {item.category}
-                      </span>
-                    </div>
-                    <div className="p-4 space-y-3">
-                      <h4 className="text-sm font-bold text-gray-900 leading-snug">{item.title}</h4>
-                      <p className="text-xs text-gray-500 line-clamp-2">{item.description}</p>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="text-sm font-bold text-gray-900">{faq.questionEn}</h3>
+                        <p className="text-xs text-gray-600 mt-1">{faq.answerEn}</p>
+                      </div>
                       <button
-                        onClick={() => setPortfolioItems(portfolioItems.filter(p => p.id !== item.id))}
-                        className="w-full py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                        onClick={() => {
+                          deleteFaq(faq.id);
+                          showToast('FAQ deleted.');
+                        }}
+                        className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"
                       >
-                        <Trash2 className="w-3.5 h-3.5" /> Delete Project
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* ========================================================== */}
-        {/* TAB 6: SERVICES & PRICING ENGINE                           */}
-        {/* ========================================================== */}
-        {activeTab === 'services' && (
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-xs space-y-6">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-bold font-serif text-gray-900">UAE Services & Volume Pricing Configuration</h3>
-              <button
-                onClick={() => alert('New service category added successfully!')}
-                className="px-4 py-2 rounded-xl bg-[#b87e2a] text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
-              >
-                <Plus className="w-4 h-4" /> Add Service Category
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[
-                { name: 'Printing (Commercial & Large Format)', base: 'AED 0.36 / unit', turnaround: '24-48 Hours', status: 'Active' },
-                { name: 'Embroidery (Polo Shirts & Caps)', base: 'AED 35.00 / unit', turnaround: '3-5 Business Days', status: 'Active' },
-                { name: 'Advertising & Signage (3D LED Letters)', base: 'AED 4,200 / unit', turnaround: '4-7 Business Days', status: 'Active' },
-                { name: 'Corporate Gifts (VIP Gift Sets)', base: 'AED 45.00 / unit', turnaround: '2-4 Business Days', status: 'Active' },
-              ].map((srv, i) => (
-                <div key={i} className="p-5 rounded-2xl border border-gray-200 bg-gray-50/60 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-extrabold text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-full">{srv.status}</span>
-                    <span className="text-xs text-gray-500 font-medium">Lead Time: {srv.turnaround}</span>
-                  </div>
-                  <h4 className="text-base font-bold text-gray-900">{srv.name}</h4>
-                  <p className="text-xs text-gray-600 font-semibold">Base Rate: <strong className="text-amber-700">{srv.base}</strong></p>
-                  <div className="pt-2 border-t border-gray-200 flex items-center gap-2">
-                    <button onClick={() => alert(`Editing pricing for ${srv.name}`)} className="px-3 py-1.5 rounded-lg bg-white border border-gray-300 text-xs font-bold text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center gap-1">
-                      <Edit3 className="w-3.5 h-3.5" /> Edit Pricing
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ========================================================== */}
-        {/* TAB 7: CONTACT & TEAM SETTINGS                             */}
-        {/* ========================================================== */}
-        {activeTab === 'settings' && (
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-xs max-w-2xl">
-            <h3 className="text-lg font-bold font-serif text-gray-900 mb-1">Company & Team Contact Settings</h3>
-            <p className="text-xs text-gray-500 mb-6">Update official contact details displayed across the entire UAE website.</p>
-
-            {savedMessage && (
-              <div className="p-4 rounded-xl bg-emerald-50 text-emerald-800 text-xs font-bold flex items-center gap-2 mb-6">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <span>Contact settings updated successfully across website!</span>
-              </div>
-            )}
-
-            <form onSubmit={handleSaveSettings} className="space-y-4">
+          {/* MEDIA ASSET LIBRARY TAB */}
+          {activeTab === 'media' && (
+            <div className="space-y-6">
               <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Direct Phone & WhatsApp Number</label>
+                <h2 className="text-2xl font-bold font-serif text-gray-900">
+                  Media Asset Library
+                </h2>
+                <p className="text-xs text-gray-500 mt-1">
+                  Browse and copy image URLs for use across services and portfolio items
+                </p>
+              </div>
+
+              {/* Add Custom Media URL */}
+              <div className="bg-white p-4 rounded-2xl border border-gray-200 flex gap-2">
                 <input
                   type="text"
-                  value={phoneSetting}
-                  onChange={(e) => setPhoneSetting(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-hidden"
-                  required
+                  placeholder="Paste external image URL to add to library..."
+                  value={customMediaUrl}
+                  onChange={(e) => setCustomMediaUrl(e.target.value)}
+                  className="flex-1 px-3.5 py-2 rounded-xl border border-gray-200 text-xs"
                 />
+                <button
+                  onClick={() => {
+                    if (customMediaUrl) {
+                      addMediaAsset(customMediaUrl);
+                      setCustomMediaUrl('');
+                      showToast('Media asset added to library!');
+                    }
+                  }}
+                  className="px-4 py-2 bg-[#b87e2a] hover:bg-[#a36e22] text-white text-xs font-bold rounded-xl cursor-pointer"
+                >
+                  Add Media
+                </button>
               </div>
 
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                {content.mediaAssets.map((asset, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-2xs group relative"
+                  >
+                    <div className="aspect-[4/3] bg-gray-100">
+                      <img src={asset} alt={`Asset ${idx}`} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="p-2.5 flex items-center justify-between bg-white border-t border-gray-100">
+                      <span className="text-[10px] text-gray-500 truncate max-w-[120px]">
+                        {asset.split('/').pop()}
+                      </span>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(asset);
+                          showToast('Image URL copied to clipboard!');
+                        }}
+                        className="p-1.5 text-amber-700 hover:bg-amber-50 rounded-lg cursor-pointer"
+                        title="Copy Image URL"
+                      >
+                        <Copy className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* BACKUP & EXPORT TAB */}
+          {activeTab === 'backup' && (
+            <div className="space-y-6">
               <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase mb-1">General & Quotations Email</label>
-                <input
-                  type="email"
-                  value={emailInfo}
-                  onChange={(e) => setEmailInfo(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-hidden"
-                  required
-                />
+                <h2 className="text-2xl font-bold font-serif text-gray-900">
+                  Backup, Export & Factory Reset
+                </h2>
+                <p className="text-xs text-gray-500 mt-1">
+                  Download full JSON backups or restore previous CMS content states
+                </p>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Adeel (Executive Email)</label>
-                <input
-                  type="email"
-                  value={emailAdeel}
-                  onChange={(e) => setEmailAdeel(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-hidden"
-                  required
-                />
-              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {/* Export JSON */}
+                <div className="bg-white p-6 rounded-2xl border border-gray-200 space-y-4">
+                  <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                    <FileJson className="w-5 h-5 text-amber-600" />
+                    <span>Export Content Backup</span>
+                  </h3>
+                  <p className="text-xs text-gray-600">
+                    Download a complete JSON snapshot of all your site branding, services, and portfolio data.
+                  </p>
+                  <button
+                    onClick={() => {
+                      const json = exportJsonBackup();
+                      const blob = new Blob([json], { type: 'application/json' });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `aladeel-cms-backup-${Date.now()}.json`;
+                      a.click();
+                      showToast('JSON Backup downloaded!');
+                    }}
+                    className="w-full py-3 rounded-xl bg-[#081C15] hover:bg-[#0d2b1f] text-white text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <FolderDown className="w-4 h-4 text-amber-400" />
+                    <span>Download JSON File</span>
+                  </button>
+                </div>
 
-              <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Carina (Sales & Accounts Email)</label>
-                <input
-                  type="email"
-                  value={emailCarina}
-                  onChange={(e) => setEmailCarina(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-hidden"
-                  required
-                />
+                {/* Reset to Factory Defaults */}
+                <div className="bg-white p-6 rounded-2xl border border-red-200 space-y-4">
+                  <h3 className="text-base font-bold text-red-900 flex items-center gap-2">
+                    <RotateCcw className="w-5 h-5 text-red-600" />
+                    <span>Factory Reset All Content</span>
+                  </h3>
+                  <p className="text-xs text-gray-600">
+                    Revert all changes back to pristine Al Adeel production default content.
+                  </p>
+                  <button
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          'Are you sure you want to reset all CMS content to factory defaults? This action cannot be undone.'
+                        )
+                      ) {
+                        resetToDefaults();
+                        showToast('Reset all CMS content to factory defaults.');
+                      }
+                    }}
+                    className="w-full py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                    <span>Reset All to Factory Defaults</span>
+                  </button>
+                </div>
               </div>
+            </div>
+          )}
+        </main>
 
-              <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Noor (Client Relations Email)</label>
-                <input
-                  type="email"
-                  value={emailNoor}
-                  onChange={(e) => setEmailNoor(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-hidden"
-                  required
-                />
-              </div>
-
+        {/* Live Split-Screen Preview Frame */}
+        {showLivePreview && (
+          <aside className="w-full md:w-1/2 border-l border-gray-300 bg-gray-900 flex flex-col h-[600px] md:h-auto">
+            <div className="bg-[#081C15] text-white p-3 px-4 text-xs font-bold flex items-center justify-between border-b border-amber-500/20">
+              <span className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Live Interactive Website Preview</span>
+              </span>
               <button
-                type="submit"
-                className="px-6 py-3 rounded-xl bg-[#b87e2a] hover:bg-[#a36e22] text-white font-bold text-xs shadow-md transition-all cursor-pointer"
+                onClick={() => setShowLivePreview(false)}
+                className="text-gray-400 hover:text-white cursor-pointer"
               >
-                Save Contact Settings
+                ✕
               </button>
-            </form>
-          </div>
+            </div>
+            <iframe
+              src={window.location.origin}
+              className="w-full flex-1 bg-white border-0"
+              title="Live Site Preview"
+            />
+          </aside>
         )}
-
-      </main>
+      </div>
     </div>
   );
 };

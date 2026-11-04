@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { Sparkles } from 'lucide-react';
 import { Language, ServiceId } from '../types';
-import { SERVICES_DATA } from '../data/content';
+import { useCms } from '../context/CmsContext';
 
 interface ServicesPageProps {
   lang: Language;
   onNavigate: (page: string, params?: any) => void;
+  initialServiceId?: ServiceId;
 }
 
-export const ServicesPage: React.FC<ServicesPageProps> = ({ lang, onNavigate }) => {
-  const [activeTab, setActiveTab] = useState<ServiceId>('printing');
+export const ServicesPage: React.FC<ServicesPageProps> = ({ lang, onNavigate, initialServiceId }) => {
+  const { content } = useCms();
+  const servicesList = content.services;
+  const [activeTab, setActiveTab] = useState<string>(initialServiceId || servicesList[0]?.id || 'printing');
 
-  const selectedService = SERVICES_DATA.find((s) => s.id === activeTab) || SERVICES_DATA[0];
+  const selectedService = servicesList.find((s) => s.id === activeTab) || servicesList[0];
 
   return (
     <div className="py-12 bg-white">
@@ -32,7 +35,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ lang, onNavigate }) 
 
           {/* Quick Service Selection Tabs */}
           <div className="flex flex-wrap gap-2 pt-6">
-            {SERVICES_DATA.map((srv) => (
+            {servicesList.map((srv) => (
               <button
                 key={srv.id}
                 onClick={() => setActiveTab(srv.id)}
@@ -55,7 +58,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ lang, onNavigate }) 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
             {/* Visual Photo */}
-            <div className="lg:col-span-6 rounded-2xl overflow-hidden border border-gray-200/80 shadow-lg aspect-[16/11] bg-white">
+            <div className="lg:col-span-6 rounded-2xl overflow-hidden border border-gray-200/80 shadow-lg aspect-[4/3] bg-white">
               <img
                 src={selectedService.image}
                 alt={selectedService.title}
@@ -96,7 +99,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ lang, onNavigate }) 
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left rtl:text-right">
-          {SERVICES_DATA.map((srv) => (
+          {servicesList.map((srv) => (
             <div
               key={srv.id}
               className="bg-white rounded-2xl border border-gray-200 hover:border-amber-300 shadow-xs hover:shadow-lg transition-all p-6 flex flex-col justify-between"

@@ -12,6 +12,7 @@ import { BrandLogo } from './BrandLogo';
 import { Language } from '../types';
 import { PageRoute } from '../types/routes';
 import { TRANSLATIONS } from '../data/content';
+import { useCms } from '../context/CmsContext';
 
 interface FooterProps {
   lang: Language;
@@ -21,7 +22,9 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const { content } = useCms();
   const t = TRANSLATIONS[lang];
+  const { branding, services } = content;
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -241,8 +244,8 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
                   <Phone className="w-4 h-4 text-amber-400" />
                 </div>
                 <div>
-                  <a href="tel:+971562612617" className="hover:text-white transition-colors font-bold text-emerald-100 text-sm block">
-                    +971 56 261 2617
+                  <a href={`tel:${branding.phonePrimary}`} className="hover:text-white transition-colors font-bold text-emerald-100 text-sm block">
+                    {branding.phonePrimary}
                   </a>
                   <span className="text-[11px] text-emerald-300/70 block mt-0.5">Direct WhatsApp & Sales</span>
                 </div>
@@ -255,7 +258,7 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
                 </div>
                 <div>
                   <span className="text-white block font-bold text-sm">Dubai, UAE</span>
-                  <span className="text-[11px] text-emerald-300/70 block mt-0.5">Production Plant & Showroom</span>
+                  <span className="text-[11px] text-emerald-300/70 block mt-0.5">{branding.addressEn}</span>
                 </div>
               </div>
 

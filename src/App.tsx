@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { CmsProvider, useCms } from './context/CmsContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { HomePage } from './pages/HomePage';
@@ -11,12 +12,13 @@ import { Language } from './types';
 import { PageRoute } from './types/routes';
 import { MessageCircle } from 'lucide-react';
 
-export default function App() {
+function AppContent() {
   const [lang, setLang] = useState<Language>('en');
   const [currentPage, setCurrentPage] = useState<PageRoute>('home');
   const [pageParams, setPageParams] = useState<any>({});
+  const { content } = useCms();
 
-  // Sync route with URL hash for seamless multi-page experience without popups
+  // Sync route with URL hash
   useEffect(() => {
     const handlePopState = () => {
       const hash = window.location.hash.replace('#', '') || 'home';
@@ -44,14 +46,13 @@ export default function App() {
     const targetPage = (page as PageRoute) || 'home';
     setCurrentPage(targetPage);
     setPageParams(params || {});
-    
-    // Update hash for bookmarking and history navigation
-    const queryPart = params && Object.keys(params).length > 0
-      ? '?' + new URLSearchParams(params).toString()
-      : '';
+
+    const queryPart =
+      params && Object.keys(params).length > 0
+        ? '?' + new URLSearchParams(params).toString()
+        : '';
     window.location.hash = targetPage + queryPart;
 
-    // Scroll to top on page navigation
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -67,6 +68,8 @@ export default function App() {
     );
   }
 
+  const whatsappHref = `https://wa.me/${content.branding.whatsappNumber.replace(/[^0-9]/g, '')}?text=Hello%20${encodeURIComponent(content.branding.brandNameEn)},%20I%20would%20like%20to%20inquire%20about%20your%20services.`;
+
   return (
     <div
       dir={lang === 'ar' ? 'rtl' : 'ltr'}
@@ -80,34 +83,23 @@ export default function App() {
         onToggleLang={toggleLanguage}
       />
 
-      {/* Main Multi-Page Content (No Popups!) */}
+      {/* Main Multi-Page Content */}
       <main className="flex-1">
-        {currentPage === 'home' && (
-          <HomePage lang={lang} onNavigate={navigate} />
-        )}
+        {currentPage === 'home' && <HomePage lang={lang} onNavigate={navigate} />}
         {currentPage === 'services' && (
-          <ServicesPage lang={lang} onNavigate={navigate} />
+          <ServicesPage lang={lang} onNavigate={navigate} initialServiceId={pageParams.serviceId} />
         )}
-        {currentPage === 'portfolio' && (
-          <PortfolioPage lang={lang} onNavigate={navigate} />
-        )}
-        {currentPage === 'about' && (
-          <AboutPage lang={lang} onNavigate={navigate} />
-        )}
-        {currentPage === 'contact' && (
-          <ContactPage lang={lang} />
-        )}
+        {currentPage === 'portfolio' && <PortfolioPage lang={lang} onNavigate={navigate} />}
+        {currentPage === 'about' && <AboutPage lang={lang} onNavigate={navigate} />}
+        {currentPage === 'contact' && <ContactPage lang={lang} />}
       </main>
 
       {/* Footer */}
-      <Footer
-        lang={lang}
-        onNavigate={navigate}
-      />
+      <Footer lang={lang} onNavigate={navigate} />
 
-      {/* Floating UAE WhatsApp Chat */}
+      {/* Floating Dynamic WhatsApp Button */}
       <a
-        href="https://wa.me/971562612617?text=Hello%20Al%20Adeel%20Advertising%20LLC,%20I%20would%20like%20to%20inquire%20about%20your%20printing%20and%20branding%20services."
+        href={whatsappHref}
         target="_blank"
         rel="noreferrer"
         aria-label="Chat on WhatsApp"
@@ -119,5 +111,13 @@ export default function App() {
         </span>
       </a>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <CmsProvider>
+      <AppContent />
+    </CmsProvider>
   );
 }

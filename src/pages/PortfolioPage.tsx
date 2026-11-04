@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, Clock, Package, Sparkles } from 'lucide-react';
 import { Language, PortfolioCategory } from '../types';
-import { PORTFOLIO_DATA } from '../data/content';
+import { useCms } from '../context/CmsContext';
 
 interface PortfolioPageProps {
   lang: Language;
@@ -11,6 +11,8 @@ interface PortfolioPageProps {
 export const PortfolioPage: React.FC<PortfolioPageProps> = ({ lang, onNavigate }) => {
   const [activeFilter, setActiveFilter] = useState<PortfolioCategory>('all');
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const { content } = useCms();
+  const portfolioList = content.portfolio;
 
   const filterTabs: { key: PortfolioCategory; label: string; labelAr: string }[] = [
     { key: 'all', label: 'All Projects', labelAr: 'كافة الأعمال' },
@@ -22,8 +24,8 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({ lang, onNavigate }
   ];
 
   const filteredItems = activeFilter === 'all'
-    ? PORTFOLIO_DATA
-    : PORTFOLIO_DATA.filter((item) => item.category === activeFilter);
+    ? portfolioList
+    : portfolioList.filter((item) => item.category === activeFilter);
 
   return (
     <div className="py-12 bg-white">
@@ -70,8 +72,8 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({ lang, onNavigate }
                 className="bg-white rounded-2xl border border-gray-200 hover:border-amber-300 shadow-xs hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col justify-between"
               >
                 <div>
-                  {/* Photo */}
-                  <div className="aspect-[16/10] overflow-hidden bg-gray-100 relative group">
+                  {/* Photo - balanced 4:3 aspect ratio */}
+                  <div className="aspect-[4/3] overflow-hidden bg-gray-50 relative group flex items-center justify-center">
                     <img
                       src={item.image}
                       alt={item.title}

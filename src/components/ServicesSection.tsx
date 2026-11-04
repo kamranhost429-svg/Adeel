@@ -1,7 +1,8 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Language, ServiceId } from '../types';
-import { SERVICES_DATA, TRANSLATIONS } from '../data/content';
+import { TRANSLATIONS } from '../data/content';
+import { useCms } from '../context/CmsContext';
 
 interface ServicesSectionProps {
   lang: Language;
@@ -12,7 +13,9 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   lang,
   onNavigateToServices,
 }) => {
+  const { content } = useCms();
   const t = TRANSLATIONS[lang];
+  const servicesList = content.services;
 
   return (
     <section id="services" className="py-14 sm:py-20 bg-white">
@@ -43,16 +46,16 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           </div>
         </div>
 
-        {/* 4 Service Cards Grid */}
+        {/* Dynamic Service Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
-          {SERVICES_DATA.map((service) => (
+          {servicesList.map((service) => (
             <div
               key={service.id}
               onClick={() => onNavigateToServices(service.id)}
               className="group bg-white rounded-2xl border border-gray-100 hover:border-amber-300 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden cursor-pointer"
             >
-              {/* Card Image Cover - Sleek compact height */}
-              <div className="relative aspect-[16/9.5] overflow-hidden bg-gray-100">
+              {/* Card Image Cover - balanced 4:3 aspect ratio */}
+              <div className="relative aspect-[4/3] overflow-hidden bg-gray-50 flex items-center justify-center">
                 <img
                   src={service.image}
                   alt={service.title}

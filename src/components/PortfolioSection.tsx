@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Language, PortfolioCategory, PortfolioItem } from '../types';
-import { PORTFOLIO_DATA, TRANSLATIONS } from '../data/content';
+import { TRANSLATIONS } from '../data/content';
+import { useCms } from '../context/CmsContext';
 
 interface PortfolioSectionProps {
   lang: Language;
@@ -13,7 +14,9 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
   onNavigateToPortfolio,
 }) => {
   const [activeFilter, setActiveFilter] = useState<PortfolioCategory>('all');
+  const { content } = useCms();
   const t = TRANSLATIONS[lang];
+  const portfolioList = content.portfolio;
 
   const filterKeys: PortfolioCategory[] = [
     'all',
@@ -25,8 +28,8 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
   ];
 
   const filteredItems = activeFilter === 'all'
-    ? PORTFOLIO_DATA
-    : PORTFOLIO_DATA.filter((item) => item.category === activeFilter);
+    ? portfolioList
+    : portfolioList.filter((item) => item.category === activeFilter);
 
   return (
     <section id="portfolio" className="py-14 sm:py-20 bg-white">
@@ -84,8 +87,8 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
               onClick={onNavigateToPortfolio}
               className="group cursor-pointer rounded-2xl overflow-hidden border border-gray-200/80 bg-white hover:border-amber-300 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col"
             >
-              {/* Image Preview */}
-              <div className="relative aspect-[16/9.5] overflow-hidden bg-gray-100">
+              {/* Image Preview - balanced 4:3 aspect ratio */}
+              <div className="relative aspect-[4/3] overflow-hidden bg-gray-50 flex items-center justify-center">
                 <img
                   src={item.image}
                   alt={item.title}

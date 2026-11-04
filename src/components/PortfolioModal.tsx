@@ -42,7 +42,7 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
         {/* Body */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Main Visual */}
-          <div className="rounded-xl overflow-hidden bg-gray-100 border border-gray-200 aspect-[16/9] shadow-inner">
+          <div className="rounded-xl overflow-hidden bg-gray-50 border border-gray-200 aspect-[4/3] max-h-[420px] mx-auto shadow-inner flex items-center justify-center">
             <img
               src={item.image}
               alt={item.title}
