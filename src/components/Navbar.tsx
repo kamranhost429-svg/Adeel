@@ -27,6 +27,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   const t = TRANSLATIONS[lang];
   const servicesList = content.services;
   const displayPhone = content.branding.phonePrimary;
+  // UAE country code already includes the trunk prefix; omit the extra local 0 when dialing.
+  const dialPhone = displayPhone.replace(/^\+9710/, '+971').replace(/\s/g, '');
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -150,7 +152,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="hidden lg:flex items-center gap-6">
             {/* Phone & Location */}
             <a
-              href={`tel:${displayPhone}`}
+              href={`tel:${dialPhone}`}
               className="flex items-center gap-2.5 text-left rtl:text-right group"
             >
               <div className="w-9 h-9 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
@@ -180,7 +182,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex lg:hidden items-center gap-2 sm:gap-3">
             {/* Tablet phone link */}
             <a
-              href={`tel:${displayPhone}`}
+              href={`tel:${dialPhone}`}
               className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 text-xs font-semibold hover:bg-emerald-100 transition-colors"
             >
               <Phone className="w-3.5 h-3.5 fill-emerald-600" />
@@ -270,7 +272,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <div className="pt-3 border-t border-gray-100 flex flex-col sm:flex-row gap-2">
               <a
-                href={`tel:${displayPhone}`}
+                href={`tel:${dialPhone}`}
                 className="flex items-center justify-center gap-2 text-xs font-bold text-gray-800 bg-gray-100 hover:bg-gray-200 py-2.5 px-3 rounded-xl transition-colors"
               >
                 <Phone className="w-3.5 h-3.5 text-emerald-600" />
