@@ -231,7 +231,7 @@ export const TRANSLATIONS = {
       allServices: 'All Services',
     },
     topBar: {
-      phone: '+971 52 818 6248',
+      phone: '+9710507196248',
       location: 'Dubai, UAE',
     },
     hero: {
@@ -309,7 +309,7 @@ export const TRANSLATIONS = {
       allServices: 'كافة الخدمات',
     },
     topBar: {
-      phone: '+971 52 818 6248',
+      phone: '+9710507196248',
       location: 'دبي، الإمارات',
     },
     hero: {
