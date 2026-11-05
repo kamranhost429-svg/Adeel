@@ -79,12 +79,12 @@ export const INITIAL_DEFAULT_CONTENT: FullSiteContent = {
     brandNameAr: TRANSLATIONS.ar.brandName,
     taglineEn: TRANSLATIONS.en.tagline,
     taglineAr: TRANSLATIONS.ar.tagline,
-    phonePrimary: '+971 56 261 2617',
+    phonePrimary: '+971 52 818 6248',
     phoneSecondary: '+971 4 221 8830',
-    whatsappNumber: '+971562612617',
+    whatsappNumber: '+971528186248',
     email: 'info@aladeeladvertising.com',
-    addressEn: 'Industrial Area 3, Al Qusais, Dubai, United Arab Emirates',
-    addressAr: 'المنطقة الصناعية 3، القصير، دبي، الإمارات العربية المتحدة',
+    addressEn: 'Warehouse 2, Dubai Industrial City (Cluster T & A Showrooms)',
+    addressAr: 'مستودع 2، مدينة دبي الصناعية (معارض كلاستر T و A)',
     officeHoursEn: 'Mon - Sat: 8:00 AM - 8:00 PM',
     officeHoursAr: 'الإثنين - السبت: 8:00 صباحاً - 8:00 مساءً',
     googleMapsUrl: 'https://maps.google.com/?q=Al+Adeel+Advertising+Dubai',
@@ -193,10 +193,17 @@ export const CmsProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
+        const loadedBranding = { ...INITIAL_DEFAULT_CONTENT.branding, ...(parsed.branding || {}) };
+        if (loadedBranding.phonePrimary === '+971 56 261 2617') {
+          loadedBranding.phonePrimary = '+971 52 818 6248';
+        }
+        if (loadedBranding.whatsappNumber === '+971562612617') {
+          loadedBranding.whatsappNumber = '+971528186248';
+        }
         return {
           ...INITIAL_DEFAULT_CONTENT,
           ...parsed,
-          branding: { ...INITIAL_DEFAULT_CONTENT.branding, ...(parsed.branding || {}) },
+          branding: loadedBranding,
           hero: { ...INITIAL_DEFAULT_CONTENT.hero, ...(parsed.hero || {}) },
         };
       }

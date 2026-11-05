@@ -180,11 +180,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex lg:hidden items-center gap-2 sm:gap-3">
             {/* Tablet phone link */}
             <a
-              href="tel:+971562612617"
+              href={`tel:${displayPhone}`}
               className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 text-xs font-semibold hover:bg-emerald-100 transition-colors"
             >
               <Phone className="w-3.5 h-3.5 fill-emerald-600" />
-              <span>+971 56 261 2617</span>
+              <span>{displayPhone}</span>
             </a>
 
             {/* Contact CTA */}
@@ -270,14 +270,14 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <div className="pt-3 border-t border-gray-100 flex flex-col sm:flex-row gap-2">
               <a
-                href="tel:+971562612617"
+                href={`tel:${displayPhone}`}
                 className="flex items-center justify-center gap-2 text-xs font-bold text-gray-800 bg-gray-100 hover:bg-gray-200 py-2.5 px-3 rounded-xl transition-colors"
               >
                 <Phone className="w-3.5 h-3.5 text-emerald-600" />
-                <span>+971 56 261 2617</span>
+                <span>{displayPhone}</span>
               </a>
               <a
-                href="https://wa.me/971562612617"
+                href={`https://wa.me/${content.branding.whatsappNumber.replace(/[^0-9]/g, '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 py-2.5 px-3 rounded-xl transition-colors"

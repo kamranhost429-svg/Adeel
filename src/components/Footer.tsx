@@ -96,7 +96,7 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
               </a>
 
               <a
-                href="https://wa.me/971562612617"
+                href={`https://wa.me/${branding.whatsappNumber.replace(/[^0-9]/g, '')}`}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="WhatsApp"
@@ -240,25 +240,43 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
               {/* Phone & WhatsApp */}
               <div className="flex items-start gap-3 bg-emerald-950/50 p-3.5 rounded-xl border border-emerald-800/30">
-                <div className="w-8 h-8 rounded-lg bg-emerald-900 border border-emerald-700/80 flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-emerald-900 border border-emerald-700/80 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <Phone className="w-4 h-4 text-amber-400" />
                 </div>
-                <div>
-                  <a href={`tel:${branding.phonePrimary}`} className="hover:text-white transition-colors font-bold text-emerald-100 text-sm block">
-                    {branding.phonePrimary}
-                  </a>
-                  <span className="text-[11px] text-emerald-300/70 block mt-0.5">Direct WhatsApp & Sales</span>
+                <div className="space-y-1.5 w-full text-xs">
+                  <div>
+                    <span className="text-[10px] text-emerald-300/70 uppercase block font-semibold">Sales & Inquiries</span>
+                    <a href={`tel:${branding.phonePrimary}`} className="hover:text-white transition-colors font-bold text-emerald-100 text-sm block">
+                      {branding.phonePrimary}
+                    </a>
+                  </div>
+                  <div className="pt-1.5 border-t border-emerald-800/40">
+                    <span className="text-[10px] text-emerald-300/70 uppercase block font-semibold">Direct Line</span>
+                    <a href="tel:+971562612617" className="hover:text-white transition-colors font-bold text-emerald-100 text-sm block">
+                      +971 56 261 2617
+                    </a>
+                  </div>
                 </div>
               </div>
 
               {/* Location */}
               <div className="flex items-start gap-3 bg-emerald-950/50 p-3.5 rounded-xl border border-emerald-800/30">
-                <div className="w-8 h-8 rounded-lg bg-emerald-900 border border-emerald-700/80 flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-emerald-900 border border-emerald-700/80 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <MapPin className="w-4 h-4 text-amber-400" />
                 </div>
-                <div>
-                  <span className="text-white block font-bold text-sm">Dubai, UAE</span>
-                  <span className="text-[11px] text-emerald-300/70 block mt-0.5">{branding.addressEn}</span>
+                <div className="space-y-1.5 w-full text-xs">
+                  <div>
+                    <span className="text-[10px] text-emerald-300/70 uppercase block font-semibold">Warehouse & Factory</span>
+                    <span className="font-bold text-emerald-100 text-xs block leading-tight">
+                      Warehouse 2, Dubai Industrial City
+                    </span>
+                  </div>
+                  <div className="pt-1.5 border-t border-emerald-800/40">
+                    <span className="text-[10px] text-emerald-300/70 uppercase block font-semibold">Showrooms</span>
+                    <span className="text-emerald-100/90 text-[11px] block leading-tight">
+                      Cluster T (4–11) & Cluster A (3–11, 13, 15)
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -267,27 +285,27 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
                 <div className="w-8 h-8 rounded-lg bg-emerald-900 border border-emerald-700/80 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <Mail className="w-4 h-4 text-amber-400" />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 w-full text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2.5 w-full text-xs">
                   <div>
-                    <span className="text-[10px] text-emerald-300/70 uppercase block">Quotations & General</span>
+                    <span className="text-[10px] text-emerald-300/70 uppercase block font-semibold">Carina (Sales & Accounts)</span>
+                    <a href="mailto:carina@aladeeladvertising.com" className="hover:text-white transition-colors text-emerald-200 font-medium block">
+                      carina@aladeeladvertising.com
+                    </a>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-emerald-300/70 uppercase block font-semibold">General & Quotations</span>
                     <a href="mailto:info@aladeeladvertising.com" className="hover:text-white transition-colors text-emerald-200 font-medium block">
                       info@aladeeladvertising.com
                     </a>
                   </div>
                   <div>
-                    <span className="text-[10px] text-emerald-300/70 uppercase block">Executive Contact</span>
+                    <span className="text-[10px] text-emerald-300/70 uppercase block font-semibold">Adeel (Executive)</span>
                     <a href="mailto:adeel@aladeeladvertising.com" className="hover:text-white transition-colors text-emerald-100/80 block">
                       adeel@aladeeladvertising.com
                     </a>
                   </div>
                   <div>
-                    <span className="text-[10px] text-emerald-300/70 uppercase block">Sales & Accounts</span>
-                    <a href="mailto:carina@aladeeladvertising.com" className="hover:text-white transition-colors text-emerald-100/80 block">
-                      carina@aladeeladvertising.com
-                    </a>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-emerald-300/70 uppercase block">Client Relations</span>
+                    <span className="text-[10px] text-emerald-300/70 uppercase block font-semibold">Noor (Administrative)</span>
                     <a href="mailto:noor@aladeeladvertising.com" className="hover:text-white transition-colors text-emerald-100/80 block">
                       noor@aladeeladvertising.com
                     </a>

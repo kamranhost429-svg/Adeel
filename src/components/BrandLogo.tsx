@@ -14,10 +14,10 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   // Height sizing for header and footer logos - Clean, proportionate sizing
   const headerHeightClass =
     size === 'sm'
-      ? 'h-7 sm:h-8'
+      ? 'h-6 sm:h-7'
       : size === 'lg'
-      ? 'h-11 sm:h-13 md:h-14 lg:h-[58px]'
-      : 'h-9 sm:h-10 md:h-11';
+      ? 'h-9 sm:h-11 md:h-12 lg:h-[50px]'
+      : 'h-8 sm:h-9 md:h-10';
 
   const footerHeightClass =
     size === 'sm'
@@ -48,7 +48,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           height={724}
           loading="eager"
           decoding="async"
-          className={`${headerHeightClass} w-auto max-w-[200px] xs:max-w-[230px] sm:max-w-[270px] md:max-w-[320px] object-contain block`}
+          className={`${headerHeightClass} w-auto max-w-[170px] xs:max-w-[200px] sm:max-w-[240px] md:max-w-[280px] object-contain block`}
         />
       )}
     </div>

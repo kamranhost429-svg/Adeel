@@ -50,12 +50,23 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang }) => {
               <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center flex-shrink-0">
                 <Phone className="w-6 h-6" />
               </div>
-              <div>
-                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block">Direct Phone & WhatsApp</span>
-                <a href={`tel:${branding.phonePrimary}`} className="text-lg font-bold text-gray-900 hover:text-[#b87e2a] transition-colors block mt-0.5">
-                  {branding.phonePrimary}
-                </a>
-                <span className="text-xs text-gray-500 block mt-1">Direct sales, quotations & inquiries (Dubai, UAE)</span>
+              <div className="w-full">
+                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Direct Phone & WhatsApp</span>
+                <div className="space-y-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-1.5 border-b border-gray-200/60">
+                    <span className="text-xs text-gray-600 font-medium">Sales & Inquiries:</span>
+                    <a href={`tel:${branding.phonePrimary}`} className="text-base font-bold text-gray-900 hover:text-[#b87e2a] transition-colors">
+                      {branding.phonePrimary}
+                    </a>
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                    <span className="text-xs text-gray-600 font-medium">Direct Line:</span>
+                    <a href="tel:+971562612617" className="text-base font-bold text-gray-900 hover:text-[#b87e2a] transition-colors">
+                      +971 56 261 2617
+                    </a>
+                  </div>
+                </div>
+                <span className="text-xs text-gray-500 block mt-2.5">Direct sales, quotations & consultations (Dubai, UAE)</span>
               </div>
             </div>
 
@@ -68,6 +79,13 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang }) => {
                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Official Email Contacts</span>
                 
                 <div className="space-y-2 text-xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-1.5 border-b border-gray-200/60">
+                    <span className="text-gray-600 font-medium">Carina (Sales & Accounts):</span>
+                    <a href="mailto:carina@aladeeladvertising.com" className="font-bold text-gray-900 hover:text-[#b87e2a] transition-colors">
+                      carina@aladeeladvertising.com
+                    </a>
+                  </div>
+
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-1.5 border-b border-gray-200/60">
                     <span className="text-gray-600 font-medium">General & Quotations:</span>
                     <a href="mailto:info@aladeeladvertising.com" className="font-bold text-gray-900 hover:text-[#b87e2a] transition-colors">
@@ -82,15 +100,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang }) => {
                     </a>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-1.5 border-b border-gray-200/60">
-                    <span className="text-gray-600 font-medium">Carina (Sales & Accounts):</span>
-                    <a href="mailto:carina@aladeeladvertising.com" className="font-bold text-gray-900 hover:text-[#b87e2a] transition-colors">
-                      carina@aladeeladvertising.com
-                    </a>
-                  </div>
-
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between">
-                    <span className="text-gray-600 font-medium">Noor (Client Relations):</span>
+                    <span className="text-gray-600 font-medium">Noor (Administrative):</span>
                     <a href="mailto:noor@aladeeladvertising.com" className="font-bold text-gray-900 hover:text-[#b87e2a] transition-colors">
                       noor@aladeeladvertising.com
                     </a>
@@ -99,28 +110,69 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang }) => {
               </div>
             </div>
 
-            {/* Location Card */}
+            {/* Location & Showrooms Card */}
             <div className="p-6 bg-[#faf8f5] rounded-2xl border border-amber-900/10 flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-emerald-900 text-white flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 rounded-xl bg-emerald-900 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
                 <MapPin className="w-6 h-6" />
               </div>
-              <div>
-                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block">Showroom & Workshop</span>
-                <span className="text-base font-bold text-gray-900 block mt-0.5">Dubai, United Arab Emirates</span>
-                <span className="text-xs text-gray-500 block mt-1">Full production plant with client showroom</span>
+              <div className="w-full">
+                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">
+                  {lang === 'ar' ? 'المستودع والمصنع والمعارض' : 'Production Plant, Warehouse & Showrooms'}
+                </span>
+                
+                <div className="space-y-2 text-xs">
+                  <div className="pb-2 border-b border-gray-200/60">
+                    <span className="text-gray-500 block text-[11px] uppercase tracking-wide font-semibold">
+                      {lang === 'ar' ? 'المستودع والمصنع الرئيسي' : 'Main Warehouse & Factory'}
+                    </span>
+                    <span className="font-bold text-gray-900 text-sm block mt-0.5">
+                      Warehouse 2, Dubai Industrial City
+                    </span>
+                  </div>
+
+                  <div className="pb-2 border-b border-gray-200/60">
+                    <span className="text-gray-500 block text-[11px] uppercase tracking-wide font-semibold">
+                      {lang === 'ar' ? 'معارض كلاستر T' : 'Cluster T Showrooms'}
+                    </span>
+                    <span className="font-bold text-gray-900 text-sm block mt-0.5">
+                      Cluster T, Showroom 4 to 11
+                    </span>
+                  </div>
+
+                  <div>
+                    <span className="text-gray-500 block text-[11px] uppercase tracking-wide font-semibold">
+                      {lang === 'ar' ? 'معارض كلاستر A' : 'Cluster A Showrooms'}
+                    </span>
+                    <span className="font-bold text-gray-900 text-sm block mt-0.5">
+                      Cluster A, Showroom 3 to 11, 13 & 15
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-3 pt-2.5 border-t border-amber-900/10 flex items-center justify-between text-xs text-gray-500">
+                  <span className="font-medium text-gray-700">Dubai, United Arab Emirates</span>
+                  <a
+                    href="https://maps.google.com/?q=Dubai+Industrial+City"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-bold text-[#b87e2a] hover:underline"
+                  >
+                    {lang === 'ar' ? 'عرض على الخريطة ↗' : 'View on Map ↗'}
+                  </a>
+                </div>
               </div>
             </div>
 
             {/* WhatsApp Direct Action */}
             <a
-              href="https://wa.me/971562612617?text=Hello%20Al%20Adeel%20Advertising%20LLC,%20I%20would%20like%20to%20discuss%20a%20branding%20project."
+              href={`https://wa.me/${branding.whatsappNumber.replace(/[^0-9]/g, '')}?text=Hello%20${encodeURIComponent(branding.brandNameEn)},%20I%20would%20like%20to%20discuss%20a%20branding%20project.`}
               target="_blank"
               rel="noreferrer"
               className="p-5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-between transition-colors shadow-md group"
             >
               <div className="flex items-center gap-3">
                 <MessageCircle className="w-6 h-6" />
-                <span className="font-bold text-sm">Instant Chat on WhatsApp (+971 56 261 2617)</span>
+                <span className="font-bold text-sm">Instant Chat on WhatsApp ({branding.phonePrimary})</span>
               </div>
               <span className="text-white group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform">→</span>
             </a>
