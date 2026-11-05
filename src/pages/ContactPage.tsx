@@ -55,7 +55,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang }) => {
                 <div className="space-y-2">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-1.5 border-b border-gray-200/60">
                     <span className="text-xs text-gray-600 font-medium">Sales & Inquiries:</span>
-                    <a href={`tel:${branding.phonePrimary}`} className="text-base font-bold text-gray-900 hover:text-[#b87e2a] transition-colors">
+                    <a href={`tel:${branding.phonePrimary.replace(/^\+9710/, '+971').replace(/\s/g, '')}`} className="text-base font-bold text-gray-900 hover:text-[#b87e2a] transition-colors">
                       {branding.phonePrimary}
                     </a>
                   </div>
