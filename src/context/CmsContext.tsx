@@ -79,9 +79,9 @@ export const INITIAL_DEFAULT_CONTENT: FullSiteContent = {
     brandNameAr: TRANSLATIONS.ar.brandName,
     taglineEn: TRANSLATIONS.en.tagline,
     taglineAr: TRANSLATIONS.ar.tagline,
-    phonePrimary: '+971 52 818 6248',
+    phonePrimary: '+9710507196248',
     phoneSecondary: '+971 4 221 8830',
-    whatsappNumber: '+971528186248',
+    whatsappNumber: '+971507196248',
     email: 'info@aladeeladvertising.com',
     addressEn: 'Warehouse 2, Dubai Industrial City (Cluster T & A Showrooms)',
     addressAr: 'مستودع 2، مدينة دبي الصناعية (معارض كلاستر T و A)',
@@ -194,11 +194,11 @@ export const CmsProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       if (saved) {
         const parsed = JSON.parse(saved);
         const loadedBranding = { ...INITIAL_DEFAULT_CONTENT.branding, ...(parsed.branding || {}) };
-        if (loadedBranding.phonePrimary === '+971 56 261 2617') {
-          loadedBranding.phonePrimary = '+971 52 818 6248';
+        if (['+971 56 261 2617', '+971 52 818 6248'].includes(loadedBranding.phonePrimary)) {
+          loadedBranding.phonePrimary = '+9710507196248';
         }
-        if (loadedBranding.whatsappNumber === '+971562612617') {
-          loadedBranding.whatsappNumber = '+971528186248';
+        if (['+971562612617', '+971528186248'].includes(loadedBranding.whatsappNumber)) {
+          loadedBranding.whatsappNumber = '+971507196248';
         }
         return {
           ...INITIAL_DEFAULT_CONTENT,
