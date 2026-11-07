@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 60" width="260" height="60">
+  <circle cx="28" cy="30" r="22" fill="#00833e" />
+  <circle cx="28" cy="30" r="19" fill="#eaf6ee" />
+  <path d="M 20 41 C 20 34 24 31 28 31 C 32 31 36 34 36 41 Z" fill="#0e3a6c" />
+  <circle cx="28" cy="24" r="5.5" fill="#e0a370" />
+  <path d="M 23 21 C 23 18 33 18 33 21 C 33 24 23 24 23 21 Z" fill="#1b2533" />
+  <line x1="34" y1="14" x2="40" y2="38" stroke="#37a000" stroke-width="2" stroke-linecap="round"/>
+  <rect x="31" y="12" width="7" height="3" rx="1" fill="#37a000"/>
+  <path d="M 38 16 L 39 19 L 42 20 L 39 21 L 38 24 L 37 21 L 34 20 L 37 19 Z" fill="#00833e"/>
+
+  <text x="58" y="24" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="#00833e">مؤسسة تريم لخدمات التنظيف</text>
+  <text x="58" y="39" font-family="Arial, sans-serif" font-size="10" font-weight="900" letter-spacing="0.5" fill="#0e3a6c">TEHREEM CLEANING SERVICES</text>
+  <text x="58" y="51" font-family="Arial, sans-serif" font-size="7.5" font-weight="600" letter-spacing="0.8" fill="#556980">DUBAI • UAE</text>
+</svg>

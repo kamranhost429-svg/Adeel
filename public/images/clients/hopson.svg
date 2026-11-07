@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" width="240" height="60">
+  <g transform="translate(16, 12)" fill="#1e5f38">
+    <polygon points="12,4 6,14 18,14"/>
+    <polygon points="12,11 4,22 20,22"/>
+    <polygon points="12,18 2,30 22,30"/>
+    <rect x="10.5" y="30" width="3" height="5" fill="#4a3728"/>
+    <polygon points="26,0 19,12 33,12"/>
+    <polygon points="26,9 16,21 36,21"/>
+    <polygon points="26,17 14,31 38,31"/>
+    <rect x="24.5" y="31" width="3" height="5" fill="#4a3728"/>
+    <polygon points="40,5 34,15 46,15"/>
+    <polygon points="40,12 32,23 48,23"/>
+    <polygon points="40,19 30,31 50,31"/>
+    <rect x="38.5" y="31" width="3" height="5" fill="#4a3728"/>
+  </g>
+  <text x="74" y="27" font-family="Georgia, serif" font-size="13.5" font-weight="800" letter-spacing="1" fill="#144227">HOPSON THE LAKES</text>
+  <text x="74" y="41" font-family="Arial, sans-serif" font-size="7.5" font-weight="700" letter-spacing="1" fill="#2d6a4f">FINANCIAL GROUP</text>
+  <text x="74" y="52" font-family="Arial, sans-serif" font-size="7" font-weight="500" letter-spacing="0.5" fill="#6b7280">WEALTH &amp; ASSET SERVICES</text>
+</svg>

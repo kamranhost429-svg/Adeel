@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowRight, Clock, Package, Sparkles } from 'lucide-react';
 import { Language, PortfolioCategory } from '../types';
 import { useCms } from '../context/CmsContext';
+import { ValuedCustomers } from '../components/ValuedCustomers';
 
 interface PortfolioPageProps {
   lang: Language;
@@ -130,6 +131,12 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({ lang, onNavigate }
           })}
         </div>
       </div>
+
+      {/* Valued Customers Section */}
+      <ValuedCustomers
+        lang={lang}
+        onNavigate={onNavigate}
+      />
     </div>
   );
 };

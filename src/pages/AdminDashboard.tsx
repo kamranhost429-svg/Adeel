@@ -31,10 +31,12 @@ import {
   CheckCircle2,
   AlertCircle,
   FileJson,
-  Upload
+  Upload,
+  Users
 } from 'lucide-react';
-import { Language, ServiceItem, PortfolioItem } from '../types';
+import { Language, ServiceItem, PortfolioItem, ValuedCustomer } from '../types';
 import { useCms, FaqItem } from '../context/CmsContext';
+import { CUSTOMERS_DATA } from '../data/content';
 
 interface AdminDashboardProps {
   lang: Language;
@@ -59,6 +61,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
     addPortfolioItem,
     updatePortfolioItem,
     deletePortfolioItem,
+    updateCustomers,
+    addCustomer,
+    updateCustomer,
+    deleteCustomer,
     addFaq,
     deleteFaq,
     addMediaAsset,
@@ -69,7 +75,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
 
   // Active tab state
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'branding' | 'hero' | 'services' | 'portfolio' | 'faqs' | 'media' | 'backup'
+    'overview' | 'branding' | 'hero' | 'services' | 'portfolio' | 'customers' | 'faqs' | 'media' | 'backup'
   >('overview');
 
   // Live preview toggle
@@ -107,6 +113,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
       minOrder: '100 Units',
     },
     tags: ['Custom Print', 'Dubai'],
+  });
+
+  // Customer Form State
+  const [editingCustomerId, setEditingCustomerId] = useState<string | null>(null);
+  const [newCustomer, setNewCustomer] = useState<Partial<ValuedCustomer>>({
+    id: `cust-${Date.now()}`,
+    name: '',
+    nameAr: '',
+    logoUrl: '/images/clients/seybrew.png',
+    categoryEn: 'Corporate Client',
+    categoryAr: 'شريك تجاري',
   });
 
   // New FAQ Form
@@ -354,6 +371,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
           </button>
 
           <button
+            onClick={() => setActiveTab('customers')}
+            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === 'customers'
+                ? 'bg-[#b87e2a] text-white shadow-md'
+                : 'hover:bg-white/5 text-gray-300'
+            }`}
+          >
+            <Users className="w-4 h-4 text-amber-400" />
+            <span>Valued Customers ({content.customers?.length || 10})</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('faqs')}
             className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
               activeTab === 'faqs'
@@ -409,39 +438,48 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
               </div>
 
               {/* Stat Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-2xs">
-                  <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs">
+                  <span className="text-[11px] font-semibold text-gray-500 uppercase block mb-1">
                     Active Services
                   </span>
-                  <span className="text-2xl font-bold text-gray-900 font-mono">
+                  <span className="text-xl font-bold text-gray-900 font-mono">
                     {content.services.length}
                   </span>
                 </div>
 
-                <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-2xs">
-                  <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">
+                <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs">
+                  <span className="text-[11px] font-semibold text-gray-500 uppercase block mb-1">
                     Portfolio Projects
                   </span>
-                  <span className="text-2xl font-bold text-gray-900 font-mono">
+                  <span className="text-xl font-bold text-gray-900 font-mono">
                     {content.portfolio.length}
                   </span>
                 </div>
 
-                <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-2xs">
-                  <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">
+                <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs">
+                  <span className="text-[11px] font-semibold text-gray-500 uppercase block mb-1">
+                    Valued Clients
+                  </span>
+                  <span className="text-xl font-bold text-amber-700 font-mono">
+                    {content.customers?.length || 10}
+                  </span>
+                </div>
+
+                <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs">
+                  <span className="text-[11px] font-semibold text-gray-500 uppercase block mb-1">
                     Media Library Assets
                   </span>
-                  <span className="text-2xl font-bold text-gray-900 font-mono">
+                  <span className="text-xl font-bold text-gray-900 font-mono">
                     {content.mediaAssets.length}
                   </span>
                 </div>
 
-                <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-2xs">
-                  <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">
+                <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs">
+                  <span className="text-[11px] font-semibold text-gray-500 uppercase block mb-1">
                     Active FAQs
                   </span>
-                  <span className="text-2xl font-bold text-gray-900 font-mono">
+                  <span className="text-xl font-bold text-gray-900 font-mono">
                     {content.faqs.length}
                   </span>
                 </div>
@@ -942,6 +980,234 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* VALUED CUSTOMERS TAB */}
+          {activeTab === 'customers' && (
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <h2 className="text-2xl font-bold font-serif text-gray-900">
+                    Valued Customers &amp; Partner Logos
+                  </h2>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Manage the 10 sliding company logos featured on the website marquee. Images and boxes are kept sleek and compact.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      updateCustomers(CUSTOMERS_DATA);
+                      showToast('Reset to original 10 company logos.');
+                    }}
+                    className="px-3.5 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>Restore 10 Logos</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Add New Customer Form */}
+              <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-2xs space-y-4">
+                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
+                  <Plus className="w-4 h-4 text-amber-600" />
+                  <span>Add New Corporate Customer Logo</span>
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                  <div>
+                    <label className="block font-semibold text-gray-700 mb-1">Company Name (EN)</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Reform Social & Grill"
+                      value={newCustomer.name || ''}
+                      onChange={(e) => setNewCustomer((prev) => ({ ...prev, name: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-semibold text-gray-700 mb-1">Company Name (AR)</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. ريفورم سوشيال آند غريل"
+                      value={newCustomer.nameAr || ''}
+                      onChange={(e) => setNewCustomer((prev) => ({ ...prev, nameAr: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-semibold text-gray-700 mb-1">Industry / Category (EN)</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Hospitality & Dining"
+                      value={newCustomer.categoryEn || ''}
+                      onChange={(e) => setNewCustomer((prev) => ({ ...prev, categoryEn: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-semibold text-gray-700 mb-1">Logo URL (SVG / PNG)</label>
+                    <input
+                      type="text"
+                      placeholder="/images/clients/your-logo.svg"
+                      value={newCustomer.logoUrl || ''}
+                      onChange={(e) => setNewCustomer((prev) => ({ ...prev, logoUrl: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-end pt-2">
+                  <button
+                    onClick={() => {
+                      if (!newCustomer.name || !newCustomer.logoUrl) {
+                        showToast('Please provide both company name and logo URL.');
+                        return;
+                      }
+                      addCustomer({
+                        id: `cust-${Date.now()}`,
+                        name: newCustomer.name,
+                        nameAr: newCustomer.nameAr || newCustomer.name,
+                        logoUrl: newCustomer.logoUrl,
+                        categoryEn: newCustomer.categoryEn || 'Corporate Client',
+                        categoryAr: newCustomer.categoryAr || 'شريك تجاري',
+                      });
+                      setNewCustomer({
+                        name: '',
+                        nameAr: '',
+                        logoUrl: '/images/clients/seybrew.png',
+                        categoryEn: '',
+                        categoryAr: '',
+                      });
+                      showToast(`Client "${newCustomer.name}" added to sliding marquee.`);
+                    }}
+                    className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Add to Slider</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Grid of Existing Customer Logos */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {(content.customers || []).map((cust, idx) => (
+                  <div
+                    key={cust.id}
+                    className="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs space-y-3 flex flex-col justify-between"
+                  >
+                    <div>
+                      {/* Compact Logo Preview Card */}
+                      <div className="h-16 w-full rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center p-2 mb-3">
+                        <img
+                          src={cust.logoUrl}
+                          alt={cust.name}
+                          className="max-h-8 max-w-[140px] w-auto h-auto object-contain"
+                          onError={(e) => {
+                            const target = e.target as HTMLElement;
+                            target.style.display = 'none';
+                            const parent = target.parentElement;
+                            if (parent && !parent.querySelector('.err-badge')) {
+                              const span = document.createElement('span');
+                              span.className = 'err-badge text-xs font-bold text-gray-500 uppercase';
+                              span.innerText = cust.name;
+                              parent.appendChild(span);
+                            }
+                          }}
+                        />
+                      </div>
+
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-800 font-bold">
+                              #{idx + 1}
+                            </span>
+                            <h3 className="font-bold text-sm text-gray-900">{cust.name}</h3>
+                          </div>
+                          {cust.nameAr && (
+                            <p className="text-xs text-gray-500 font-serif mt-0.5">{cust.nameAr}</p>
+                          )}
+                          <span className="inline-block mt-1 text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md">
+                            {cust.categoryEn || 'Corporate Partner'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-gray-100 flex items-center justify-between">
+                      <button
+                        onClick={() =>
+                          setEditingCustomerId(editingCustomerId === cust.id ? null : cust.id)
+                        }
+                        className="px-3 py-1.5 rounded-lg bg-amber-50 text-amber-900 hover:bg-amber-100 text-xs font-bold transition-all cursor-pointer flex items-center gap-1"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>{editingCustomerId === cust.id ? 'Close' : 'Edit'}</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          deleteCustomer(cust.id);
+                          showToast(`Customer "${cust.name}" removed.`);
+                        }}
+                        className="p-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-all cursor-pointer"
+                        title="Delete Logo"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    {/* Inline Edit Form */}
+                    {editingCustomerId === cust.id && (
+                      <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 space-y-2 text-xs mt-2 animate-in fade-in">
+                        <div>
+                          <label className="block font-semibold text-gray-700 mb-0.5">Name (EN)</label>
+                          <input
+                            type="text"
+                            value={cust.name}
+                            onChange={(e) => updateCustomer(cust.id, { name: e.target.value })}
+                            className="w-full px-2.5 py-1.5 rounded-lg border border-gray-200 bg-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-semibold text-gray-700 mb-0.5">Name (AR)</label>
+                          <input
+                            type="text"
+                            value={cust.nameAr}
+                            onChange={(e) => updateCustomer(cust.id, { nameAr: e.target.value })}
+                            className="w-full px-2.5 py-1.5 rounded-lg border border-gray-200 bg-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-semibold text-gray-700 mb-0.5">Logo URL</label>
+                          <input
+                            type="text"
+                            value={cust.logoUrl}
+                            onChange={(e) => updateCustomer(cust.id, { logoUrl: e.target.value })}
+                            className="w-full px-2.5 py-1.5 rounded-lg border border-gray-200 bg-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-semibold text-gray-700 mb-0.5">Category</label>
+                          <input
+                            type="text"
+                            value={cust.categoryEn || ''}
+                            onChange={(e) => updateCustomer(cust.id, { categoryEn: e.target.value })}
+                            className="w-full px-2.5 py-1.5 rounded-lg border border-gray-200 bg-white"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

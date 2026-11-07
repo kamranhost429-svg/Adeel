@@ -2,6 +2,7 @@ import React from 'react';
 import { Hero } from '../components/Hero';
 import { ServicesSection } from '../components/ServicesSection';
 import { WhyChooseUs } from '../components/WhyChooseUs';
+import { ValuedCustomers } from '../components/ValuedCustomers';
 import { PortfolioSection } from '../components/PortfolioSection';
 import { CtaBanner } from '../components/CtaBanner';
 import { Language, ServiceId } from '../types';
@@ -28,6 +29,9 @@ export const HomePage: React.FC<HomePageProps> = ({ lang, onNavigate }) => {
         lang={lang}
         onNavigateToServices={(serviceId) => onNavigate('services', { serviceId })}
       />
+
+      {/* Valued Customers Sliding Marquee (Directly after Our Services) */}
+      <ValuedCustomers lang={lang} />
 
       {/* Portfolio Section */}
       <PortfolioSection

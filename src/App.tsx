@@ -68,7 +68,8 @@ function AppContent() {
     );
   }
 
-  const whatsappHref = `https://wa.me/${content.branding.whatsappNumber.replace(/[^0-9]/g, '')}?text=Hello%20${encodeURIComponent(content.branding.brandNameEn)},%20I%20would%20like%20to%20inquire%20about%20your%20services.`;
+  const cleanWhatsapp = content.branding.whatsappNumber.replace(/[^0-9]/g, '').replace(/^9710/, '971');
+  const whatsappHref = `https://wa.me/${cleanWhatsapp}?text=Hello%20${encodeURIComponent(content.branding.brandNameEn)},%20I%20would%20like%20to%20inquire%20about%20your%20services.`;
 
   return (
     <div

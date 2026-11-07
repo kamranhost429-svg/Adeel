@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { ServiceItem, PortfolioItem } from '../types';
-import { SERVICES_DATA, PORTFOLIO_DATA, WHY_CHOOSE_ITEMS, TRANSLATIONS } from '../data/content';
+import { ServiceItem, PortfolioItem, ValuedCustomer } from '../types';
+import { SERVICES_DATA, PORTFOLIO_DATA, WHY_CHOOSE_ITEMS, CUSTOMERS_DATA, TRANSLATIONS } from '../data/content';
 
 export interface BrandingConfig {
   brandNameEn: string;
@@ -68,6 +68,7 @@ export interface FullSiteContent {
   hero: HeroConfig;
   services: ServiceItem[];
   portfolio: PortfolioItem[];
+  customers: ValuedCustomer[];
   whyChoose: WhyChooseItem[];
   faqs: FaqItem[];
   mediaAssets: string[];
@@ -79,7 +80,7 @@ export const INITIAL_DEFAULT_CONTENT: FullSiteContent = {
     brandNameAr: TRANSLATIONS.ar.brandName,
     taglineEn: TRANSLATIONS.en.tagline,
     taglineAr: TRANSLATIONS.ar.tagline,
-    phonePrimary: '+971 50 719 6248',
+    phonePrimary: '+971 050 719 6248',
     phoneSecondary: '+971 4 221 8830',
     whatsappNumber: '+971507196248',
     email: 'info@aladeeladvertising.com',
@@ -118,6 +119,7 @@ export const INITIAL_DEFAULT_CONTENT: FullSiteContent = {
   },
   services: SERVICES_DATA,
   portfolio: PORTFOLIO_DATA,
+  customers: CUSTOMERS_DATA,
   whyChoose: WHY_CHOOSE_ITEMS,
   faqs: [
     {
@@ -143,6 +145,15 @@ export const INITIAL_DEFAULT_CONTENT: FullSiteContent = {
     },
   ],
   mediaAssets: [
+    '/images/clients/seybrew.png',
+    '/images/clients/ja1-baniyas.png',
+    '/images/clients/hsi.png',
+    '/images/clients/called-committed-commissioned.png',
+    '/images/clients/reform-social-grill.png',
+    '/images/clients/seypec.png',
+    '/images/clients/pop-igniters.png',
+    '/images/clients/hops-on-the-lakes.png',
+    '/images/clients/75-south.png',
     '/images/optimized/about-showcase.webp',
     '/images/optimized/port-banners.webp',
     '/images/optimized/port-caps-uniforms.webp',
@@ -161,7 +172,7 @@ export const INITIAL_DEFAULT_CONTENT: FullSiteContent = {
   ],
 };
 
-const STORAGE_KEY = 'al_adeel_cms_content_v1';
+const STORAGE_KEY = 'al_adeel_cms_content_v3';
 
 interface CmsContextType {
   content: FullSiteContent;
@@ -175,6 +186,10 @@ interface CmsContextType {
   addPortfolioItem: (item: PortfolioItem) => void;
   updatePortfolioItem: (id: string, item: Partial<PortfolioItem>) => void;
   deletePortfolioItem: (id: string) => void;
+  updateCustomers: (customers: ValuedCustomer[]) => void;
+  addCustomer: (customer: ValuedCustomer) => void;
+  updateCustomer: (id: string, customer: Partial<ValuedCustomer>) => void;
+  deleteCustomer: (id: string) => void;
   updateWhyChoose: (items: WhyChooseItem[]) => void;
   updateFaqs: (faqs: FaqItem[]) => void;
   addFaq: (faq: FaqItem) => void;
@@ -194,15 +209,27 @@ export const CmsProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       if (saved) {
         const parsed = JSON.parse(saved);
         const loadedBranding = { ...INITIAL_DEFAULT_CONTENT.branding, ...(parsed.branding || {}) };
-        if (loadedBranding.phonePrimary === '+971 56 261 2617' || loadedBranding.phonePrimary === '+971 52 818 6248') {
-          loadedBranding.phonePrimary = '+971 50 719 6248';
+        if (
+          loadedBranding.phonePrimary === '+971 56 261 2617' ||
+          loadedBranding.phonePrimary === '+971 52 818 6248' ||
+          loadedBranding.phonePrimary === '+971 50 719 6248' ||
+          loadedBranding.phonePrimary === '+9710507196248'
+        ) {
+          loadedBranding.phonePrimary = '+971 050 719 6248';
         }
         if (loadedBranding.whatsappNumber === '+971562612617' || loadedBranding.whatsappNumber === '+971528186248') {
           loadedBranding.whatsappNumber = '+971507196248';
         }
+
+        const hasLegacy = !parsed.customers || parsed.customers.some((c: ValuedCustomer) => c.id === 'premium-cobras' || c.logoUrl?.endsWith('.svg') || c.id === 'reform');
+        const loadedCustomers = (!hasLegacy && parsed.customers.length === 9)
+          ? parsed.customers
+          : INITIAL_DEFAULT_CONTENT.customers;
+
         return {
           ...INITIAL_DEFAULT_CONTENT,
           ...parsed,
+          customers: loadedCustomers,
           branding: loadedBranding,
           hero: { ...INITIAL_DEFAULT_CONTENT.hero, ...(parsed.hero || {}) },
         };
@@ -279,6 +306,28 @@ export const CmsProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }));
   };
 
+  const updateCustomers = (newCustomers: ValuedCustomer[]) => {
+    setContent((prev) => ({ ...prev, customers: newCustomers }));
+  };
+
+  const addCustomer = (customer: ValuedCustomer) => {
+    setContent((prev) => ({ ...prev, customers: [...prev.customers, customer] }));
+  };
+
+  const updateCustomer = (id: string, updated: Partial<ValuedCustomer>) => {
+    setContent((prev) => ({
+      ...prev,
+      customers: prev.customers.map((c) => (c.id === id ? { ...c, ...updated } : c)),
+    }));
+  };
+
+  const deleteCustomer = (id: string) => {
+    setContent((prev) => ({
+      ...prev,
+      customers: prev.customers.filter((c) => c.id !== id),
+    }));
+  };
+
   const updateWhyChoose = (items: WhyChooseItem[]) => {
     setContent((prev) => ({ ...prev, whyChoose: items }));
   };
@@ -336,6 +385,10 @@ export const CmsProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         addPortfolioItem,
         updatePortfolioItem,
         deletePortfolioItem,
+        updateCustomers,
+        addCustomer,
+        updateCustomer,
+        deleteCustomer,
         updateWhyChoose,
         updateFaqs,
         addFaq,

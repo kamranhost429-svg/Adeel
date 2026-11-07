@@ -93,17 +93,10 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang }) => {
                     </a>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-1.5 border-b border-gray-200/60">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                     <span className="text-gray-600 font-medium">Adeel (Executive):</span>
                     <a href="mailto:adeel@aladeeladvertising.com" className="font-bold text-gray-900 hover:text-[#b87e2a] transition-colors">
                       adeel@aladeeladvertising.com
-                    </a>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between">
-                    <span className="text-gray-600 font-medium">Noor (Administrative):</span>
-                    <a href="mailto:noor@aladeeladvertising.com" className="font-bold text-gray-900 hover:text-[#b87e2a] transition-colors">
-                      noor@aladeeladvertising.com
                     </a>
                   </div>
                 </div>
@@ -165,7 +158,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang }) => {
 
             {/* WhatsApp Direct Action */}
             <a
-              href={`https://wa.me/${branding.whatsappNumber.replace(/[^0-9]/g, '')}?text=Hello%20${encodeURIComponent(branding.brandNameEn)},%20I%20would%20like%20to%20discuss%20a%20branding%20project.`}
+              href={`https://wa.me/${branding.whatsappNumber.replace(/[^0-9]/g, '').replace(/^9710/, '971')}?text=Hello%20${encodeURIComponent(branding.brandNameEn)},%20I%20would%20like%20to%20discuss%20a%20branding%20project.`}
               target="_blank"
               rel="noreferrer"
               className="p-5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-between transition-colors shadow-md group"

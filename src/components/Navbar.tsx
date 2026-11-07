@@ -277,7 +277,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span>{displayPhone}</span>
               </a>
               <a
-                href={`https://wa.me/${content.branding.whatsappNumber.replace(/[^0-9]/g, '')}`}
+                href={`https://wa.me/${content.branding.whatsappNumber.replace(/[^0-9]/g, '').replace(/^9710/, '971')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 py-2.5 px-3 rounded-xl transition-colors"

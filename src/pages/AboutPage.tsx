@@ -1,6 +1,7 @@
 import React from 'react';
 import { Factory, Award, ShieldCheck, Users, MapPin, CheckCircle, ArrowRight } from 'lucide-react';
 import { Language } from '../types';
+import { ValuedCustomers } from '../components/ValuedCustomers';
 
 interface AboutPageProps {
   lang: Language;
@@ -119,6 +120,12 @@ export const AboutPage: React.FC<AboutPageProps> = ({ lang, onNavigate }) => {
           </div>
         </div>
       </div>
+
+      {/* Valued Customers & Corporate Clients */}
+      <ValuedCustomers
+        lang={lang}
+        onNavigate={onNavigate}
+      />
     </div>
   );
 };

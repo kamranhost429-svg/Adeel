@@ -1,4 +1,4 @@
-import { PortfolioItem, ServiceItem } from '../types';
+import { PortfolioItem, ServiceItem, ValuedCustomer } from '../types';
 
 export const SERVICES_DATA: ServiceItem[] = [
   {
@@ -182,6 +182,82 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
   },
 ];
 
+export const CUSTOMERS_DATA: ValuedCustomer[] = [
+  {
+    id: 'seybrew',
+    name: 'SeyBrew',
+    nameAr: 'سي برو',
+    logoUrl: '/images/clients/seybrew.png',
+    categoryEn: 'Beverage & Brewery',
+    categoryAr: 'مشروبات وضيافة',
+  },
+  {
+    id: 'ja1-baniyas',
+    name: 'JA1 Baniyas Anointed Family',
+    nameAr: 'عائلة جاي 1 بني ياس',
+    logoUrl: '/images/clients/ja1-baniyas.png',
+    categoryEn: 'Community & Events',
+    categoryAr: 'فعاليات ومجتمع',
+  },
+  {
+    id: 'hsi',
+    name: 'HSI Winning People',
+    nameAr: 'إتش إس آي وينينغ بيبول',
+    logoUrl: '/images/clients/hsi.png',
+    categoryEn: 'Corporate Apparel (Since 1991)',
+    categoryAr: 'أزياء موحدة ومؤسسية',
+  },
+  {
+    id: 'called-committed',
+    name: 'Called Committed Commissioned',
+    nameAr: 'كولد كوميتد كوميشند',
+    logoUrl: '/images/clients/called-committed-commissioned.png',
+    categoryEn: 'Apparel & Ministry',
+    categoryAr: 'ملابس ومؤسسات مجتمعية',
+  },
+  {
+    id: 'reform-social',
+    name: 'Reform Social & Grill',
+    nameAr: 'ريفورم سوشيال آند غريل دبي',
+    logoUrl: '/images/clients/reform-social-grill.png',
+    categoryEn: 'Hospitality & Dining',
+    categoryAr: 'ضيافة ومطاعم فاخرة',
+  },
+  {
+    id: 'seypec',
+    name: 'SEYPEC',
+    nameAr: 'سيبيك للبترول',
+    logoUrl: '/images/clients/seypec.png',
+    categoryEn: 'Energy & Petroleum',
+    categoryAr: 'طاقة وبترول',
+  },
+  {
+    id: 'pop-igniters',
+    name: '2026 POP Igniters',
+    nameAr: 'بوب إغنايترز 2026',
+    logoUrl: '/images/clients/pop-igniters.png',
+    categoryEn: 'Youth & Innovation Brand',
+    categoryAr: 'علامة ابتكار وفعاليات شبابية',
+  },
+  {
+    id: 'hops-on-lakes',
+    name: 'Hops On The Lakes',
+    nameAr: 'هوبس أون ذا ليكس',
+    logoUrl: '/images/clients/hops-on-the-lakes.png',
+    categoryEn: 'Festival & Hospitality',
+    categoryAr: 'مهرجانات وضيافة',
+  },
+  {
+    id: '75-south',
+    name: '75outh (The Best of Seychelles)',
+    nameAr: '75اوث - الأفضل في سيشل',
+    logoUrl: '/images/clients/75-south.png',
+    categoryEn: 'Luxury Lifestyle Apparel',
+    categoryAr: 'أزياء راقية ومستلزمات نمط حياة',
+  },
+];
+
+
 export const WHY_CHOOSE_ITEMS = [
   {
     id: 'quality',
@@ -231,7 +307,7 @@ export const TRANSLATIONS = {
       allServices: 'All Services',
     },
     topBar: {
-      phone: '+971 50 719 6248',
+      phone: '+971 050 719 6248',
       location: 'Dubai, UAE',
     },
     hero: {
@@ -256,6 +332,14 @@ export const TRANSLATIONS = {
     },
     whyChoose: {
       heading: 'Why Choose Al Adeel?',
+    },
+    valuedCustomers: {
+      eyebrow: 'OUR VALUED CUSTOMERS',
+      heading: 'Our Valued Customers',
+      subheading:
+        'Trusted by top businesses, brands, and organizations across Dubai and the UAE for quality printing, computerized embroidery, and signage solutions.',
+      counterBadge: '10+ Leading Corporate Clients',
+      pauseOnHover: 'Auto-sliding • Hover to pause',
     },
     portfolio: {
       eyebrow: 'OUR PORTFOLIO',
@@ -309,7 +393,7 @@ export const TRANSLATIONS = {
       allServices: 'كافة الخدمات',
     },
     topBar: {
-      phone: '+971 50 719 6248',
+      phone: '+971 050 719 6248',
       location: 'دبي، الإمارات',
     },
     hero: {
@@ -334,6 +418,14 @@ export const TRANSLATIONS = {
     },
     whyChoose: {
       heading: 'لماذا تختار شركة العادل؟',
+    },
+    valuedCustomers: {
+      eyebrow: 'عملاؤنا الكرام',
+      heading: 'عملاؤنا المميزون',
+      subheading:
+        'نعتز بثقة كبرى الشركات والعلامات التجارية الرائدة في دبي وكافة إمارات الدولة لحلول الطباعة والتطريز والدعاية والإعلان.',
+      counterBadge: '١٠+ علامات مميزة',
+      pauseOnHover: 'شريط متحرك • توقف عند التمرير',
     },
     portfolio: {
       eyebrow: 'معرض أعمالنا',

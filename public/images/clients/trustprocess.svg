@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 60" width="230" height="60">
+  <g transform="translate(16, 11)">
+    <rect x="0" y="0" width="34" height="36" rx="6" fill="#c62828"/>
+    <text x="17" y="24" font-family="Arial, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="1">US</text>
+  </g>
+  <text x="60" y="26" font-family="Arial, sans-serif" font-size="13.5" font-weight="900" letter-spacing="1" fill="#111827">TRUST THE PROCESS</text>
+  <text x="60" y="39" font-family="Arial, sans-serif" font-size="8" font-weight="700" letter-spacing="2" fill="#c62828">ATHLETIC WEAR</text>
+  <text x="60" y="50" font-family="Arial, sans-serif" font-size="7" font-weight="600" letter-spacing="1" fill="#6b7280">CUSTOM MERCHANDISE</text>
+</svg>

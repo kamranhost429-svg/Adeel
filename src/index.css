@@ -39,3 +39,41 @@
     letter-spacing: normal;
   }
 }
+
+/* Valued Customers Sliding Marquee */
+@keyframes customerMarqueeLtr {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes customerMarqueeRtl {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(50%);
+  }
+}
+
+.customer-slider-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: customerMarqueeLtr 30s linear infinite;
+}
+
+[dir="rtl"] .customer-slider-track {
+  animation: customerMarqueeRtl 30s linear infinite;
+}
+
+.customer-slider-track.paused {
+  animation-play-state: paused !important;
+}
+
+.customer-slider-container:hover .customer-slider-track {
+  animation-play-state: paused;
+}

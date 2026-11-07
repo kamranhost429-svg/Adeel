@@ -96,7 +96,7 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
               </a>
 
               <a
-                href={`https://wa.me/${branding.whatsappNumber.replace(/[^0-9]/g, '')}`}
+                href={`https://wa.me/${branding.whatsappNumber.replace(/[^0-9]/g, '').replace(/^9710/, '971')}`}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="WhatsApp"
@@ -302,12 +302,6 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
                     <span className="text-[10px] text-emerald-300/70 uppercase block font-semibold">Adeel (Executive)</span>
                     <a href="mailto:adeel@aladeeladvertising.com" className="hover:text-white transition-colors text-emerald-100/80 block">
                       adeel@aladeeladvertising.com
-                    </a>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-emerald-300/70 uppercase block font-semibold">Noor (Administrative)</span>
-                    <a href="mailto:noor@aladeeladvertising.com" className="hover:text-white transition-colors text-emerald-100/80 block">
-                      noor@aladeeladvertising.com
                     </a>
                   </div>
                 </div>

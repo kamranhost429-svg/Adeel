@@ -49,3 +49,13 @@ export interface QuoteEstimate {
   totalAed: number;
   estimatedDays: number;
 }
+
+export interface ValuedCustomer {
+  id: string;
+  name: string;
+  nameAr: string;
+  logoUrl: string;
+  categoryEn?: string;
+  categoryAr?: string;
+  website?: string;
+}

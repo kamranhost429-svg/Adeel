@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles } from 'lucide-react';
 import { Language, ServiceId } from '../types';
 import { useCms } from '../context/CmsContext';
+import { ValuedCustomers } from '../components/ValuedCustomers';
 
 interface ServicesPageProps {
   lang: Language;
@@ -139,6 +140,9 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ lang, onNavigate, in
           ))}
         </div>
       </div>
+
+      {/* Valued Customers Sliding Marquee (Directly after Our Services) */}
+      <ValuedCustomers lang={lang} onNavigate={onNavigate} />
     </div>
   );
 };
