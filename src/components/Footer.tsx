@@ -12,7 +12,7 @@ import { BrandLogo } from './BrandLogo';
 import { Language } from '../types';
 import { PageRoute } from '../types/routes';
 import { TRANSLATIONS } from '../data/content';
-import { useCms } from '../context/CmsContext';
+import { useCms, sanitizePhoneNumber } from '../context/CmsContext';
 
 interface FooterProps {
   lang: Language;
@@ -246,8 +246,8 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
                 <div className="space-y-1.5 w-full text-xs">
                   <div>
                     <span className="text-[10px] text-emerald-300/70 uppercase block font-semibold">Sales & Inquiries</span>
-                    <a href={`tel:${branding.phonePrimary}`} className="hover:text-white transition-colors font-bold text-emerald-100 text-sm block">
-                      {branding.phonePrimary}
+                    <a href={`tel:${sanitizePhoneNumber(branding.phonePrimary)}`} className="hover:text-white transition-colors font-bold text-emerald-100 text-sm block">
+                      {sanitizePhoneNumber(branding.phonePrimary)}
                     </a>
                   </div>
                   <div className="pt-1.5 border-t border-emerald-800/40">

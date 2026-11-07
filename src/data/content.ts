@@ -307,7 +307,7 @@ export const TRANSLATIONS = {
       allServices: 'All Services',
     },
     topBar: {
-      phone: '+971 050 719 6248',
+      phone: '+971 50 719 6248',
       location: 'Dubai, UAE',
     },
     hero: {
@@ -393,7 +393,7 @@ export const TRANSLATIONS = {
       allServices: 'كافة الخدمات',
     },
     topBar: {
-      phone: '+971 050 719 6248',
+      phone: '+971 50 719 6248',
       location: 'دبي، الإمارات',
     },
     hero: {

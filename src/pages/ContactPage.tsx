@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, MessageCircle, Send, CheckCircle2, Clock } from 'lucide-react';
 import { Language } from '../types';
-import { useCms } from '../context/CmsContext';
+import { useCms, sanitizePhoneNumber } from '../context/CmsContext';
 
 interface ContactPageProps {
   lang: Language;
@@ -55,8 +55,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang }) => {
                 <div className="space-y-2">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-1.5 border-b border-gray-200/60">
                     <span className="text-xs text-gray-600 font-medium">Sales & Inquiries:</span>
-                    <a href={`tel:${branding.phonePrimary}`} className="text-base font-bold text-gray-900 hover:text-[#b87e2a] transition-colors">
-                      {branding.phonePrimary}
+                    <a href={`tel:${sanitizePhoneNumber(branding.phonePrimary)}`} className="text-base font-bold text-gray-900 hover:text-[#b87e2a] transition-colors">
+                      {sanitizePhoneNumber(branding.phonePrimary)}
                     </a>
                   </div>
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between">
@@ -165,7 +165,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang }) => {
             >
               <div className="flex items-center gap-3">
                 <MessageCircle className="w-6 h-6" />
-                <span className="font-bold text-sm">Instant Chat on WhatsApp ({branding.phonePrimary})</span>
+                <span className="font-bold text-sm">Instant Chat on WhatsApp ({sanitizePhoneNumber(branding.phonePrimary)})</span>
               </div>
               <span className="text-white group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform">→</span>
             </a>

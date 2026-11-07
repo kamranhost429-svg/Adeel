@@ -80,7 +80,7 @@ export const INITIAL_DEFAULT_CONTENT: FullSiteContent = {
     brandNameAr: TRANSLATIONS.ar.brandName,
     taglineEn: TRANSLATIONS.en.tagline,
     taglineAr: TRANSLATIONS.ar.tagline,
-    phonePrimary: '+971 050 719 6248',
+    phonePrimary: '+971 50 719 6248',
     phoneSecondary: '+971 4 221 8830',
     whatsappNumber: '+971507196248',
     email: 'info@aladeeladvertising.com',
@@ -172,7 +172,16 @@ export const INITIAL_DEFAULT_CONTENT: FullSiteContent = {
   ],
 };
 
-const STORAGE_KEY = 'al_adeel_cms_content_v3';
+export const sanitizePhoneNumber = (phone: string | undefined): string => {
+  if (!phone) return '+971 50 719 6248';
+  return phone
+    .replace(/\+971[\s\u00A0]*0*50[\s\u00A0]*719[\s\u00A0]*6248/g, '+971 50 719 6248')
+    .replace(/\+971[\s\u00A0]*050/g, '+971 50')
+    .replace(/\+971050/g, '+971 50')
+    .replace(/050[\s\u00A0]*719[\s\u00A0]*6248/g, '50 719 6248');
+};
+
+const STORAGE_KEY = 'al_adeel_cms_content_v5';
 
 interface CmsContextType {
   content: FullSiteContent;
@@ -205,18 +214,16 @@ const CmsContext = createContext<CmsContextType | undefined>(undefined);
 export const CmsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [content, setContent] = useState<FullSiteContent>(() => {
     try {
+      // Purge all legacy cached CMS versions to prevent outdated phone numbers
+      ['al_adeel_cms_content_v1', 'al_adeel_cms_content_v2', 'al_adeel_cms_content_v3', 'al_adeel_cms_content_v4'].forEach((k) => {
+        try { localStorage.removeItem(k); } catch (e) {}
+      });
+
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         const loadedBranding = { ...INITIAL_DEFAULT_CONTENT.branding, ...(parsed.branding || {}) };
-        if (
-          loadedBranding.phonePrimary === '+971 56 261 2617' ||
-          loadedBranding.phonePrimary === '+971 52 818 6248' ||
-          loadedBranding.phonePrimary === '+971 50 719 6248' ||
-          loadedBranding.phonePrimary === '+9710507196248'
-        ) {
-          loadedBranding.phonePrimary = '+971 050 719 6248';
-        }
+        loadedBranding.phonePrimary = sanitizePhoneNumber(loadedBranding.phonePrimary);
         if (loadedBranding.whatsappNumber === '+971562612617' || loadedBranding.whatsappNumber === '+971528186248') {
           loadedBranding.whatsappNumber = '+971507196248';
         }
@@ -247,6 +254,21 @@ export const CmsProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       console.error('Failed to save CMS content to localStorage', e);
     }
   }, [content]);
+
+  useEffect(() => {
+    if (content.branding.phonePrimary.includes('050') || content.branding.phonePrimary !== '+971 50 719 6248') {
+      if (content.branding.phonePrimary.includes('719')) {
+        setContent((prev) => ({
+          ...prev,
+          branding: {
+            ...prev.branding,
+            phonePrimary: '+971 50 719 6248',
+            whatsappNumber: '+971507196248',
+          },
+        }));
+      }
+    }
+  }, [content.branding.phonePrimary]);
 
   const updateBranding = (brandingUpdates: Partial<BrandingConfig>) => {
     setContent((prev) => ({

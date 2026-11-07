@@ -5,7 +5,7 @@ import { UaeFlag } from './UaeFlag';
 import { Language } from '../types';
 import { PageRoute } from '../types/routes';
 import { TRANSLATIONS } from '../data/content';
-import { useCms } from '../context/CmsContext';
+import { useCms, sanitizePhoneNumber } from '../context/CmsContext';
 
 interface NavbarProps {
   lang: Language;
@@ -26,7 +26,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { content } = useCms();
   const t = TRANSLATIONS[lang];
   const servicesList = content.services;
-  const displayPhone = content.branding.phonePrimary;
+  const displayPhone = sanitizePhoneNumber(content.branding.phonePrimary);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
